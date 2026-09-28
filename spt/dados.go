@@ -17,7 +17,6 @@ const (
 
 type MeuCaderno struct {
 	Data time.Time `json:"id"`
-	Categoria string `json:"categoria"`
 	Valor float32 `json:"valor"`
 	Descricao float32 `json:"descricao"`
 	Categoria Categoria `json:"categoria"`
