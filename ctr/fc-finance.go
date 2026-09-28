@@ -16,7 +16,7 @@ func Saudacao() {
 	}
 
 	fmt.Printf("\n")
-	fmt.Printf("Seja bem vindo ao controle financeiro!\n")
+	fmt.Printf("Seja bem vindo ao seu controle financeiro!\n")
 
 	fmt.Printf("Quais opcoes deseja usar para cadastro?\n")
 	fmt.Printf("00 - Abortar operacao.\n")

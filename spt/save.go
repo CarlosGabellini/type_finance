@@ -7,6 +7,7 @@ import (
 )
 
 //Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
+// E mais algumas outras funcoes espalhadas.
 
 func SalvarCaderno(caderno MeuCaderno) error {
 
@@ -35,4 +36,8 @@ func SalvarCaderno(caderno MeuCaderno) error {
 	}
 
 	return nil
+}
+
+func CalcularPorcentagem(valor float64, total float64) float64 {
+	return (valor * 100) / total
 }
