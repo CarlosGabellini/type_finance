@@ -1,0 +1,12 @@
+# -----------------------------------------------
+# Usando o gitignore para ignorar o versionamento
+# de algumas coisas!
+# 
+# -----------------------------------------------
+
+# Para .exe
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
