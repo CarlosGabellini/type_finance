@@ -83,3 +83,15 @@ func CarregarCaderno(ano int) (MeuCaderno, error) {
 
 	return MinhasContas, nil
 }
+
+
+func ColocarAno(setAno int, MinhasFinancas *MeuCaderno) int {
+
+	if setAno < 1800 || setAno > 2800 {		//Duvido que esse programa sobreviva ate 2800;
+		return 0
+	} 
+
+	MinhasFinancas.Ano = setAno
+	
+	return 1
+}
