@@ -1,11 +1,17 @@
 package spt
 
-import "time"
+import (
+	"encoding/json"
+	"io"
+	"os"
+	"strconv"
+	"time"
+)
 
 //spt significa suporte!
 
 type Categoria string
-type Transacao string
+type TipoTransacao string
 
 const (
 	Superfluo Categoria = "superfluo"
@@ -13,8 +19,8 @@ const (
 	Saude Categoria = "saude"
 	Moradia Categoria = "moradia"
 	Lazer Categoria = "lazer"
-	Ganho Transacao = "ganho"
-	Gasto Transacao = "gasto"
+	Ganho TipoTransacao = "ganho"
+	Gasto TipoTransacao = "gasto"
 )
 
 type MeuCaderno struct {
@@ -23,7 +29,7 @@ type MeuCaderno struct {
 	DataFim time.Time `json:"data_fim"`
 	SaldoInicial float64 `json:"saldo_inicial"`
 	SaldoFinal float64 `json:"saldo_final"`
-	MeusGastos []Gastos
+	MeusGastos []Gastos `json:"meus_gastos"`
 }
 
 
@@ -35,11 +41,45 @@ type Gastos struct {
 	Parcelado bool `json:"parcelado"`
 	NumeroParcelas int `json:"numero_parcelas"`
 	Porcentagem float64	`json:"porcentagem"` 	//Em relacao a algum salario fixo!
-	Transacao Transacao `json:"transacao"`
+	Transacao TipoTransacao `json:"transacao"`
 	ID int `json:"ID"`
 }
 
 //Comecando a fazer as funcoes agora!
 
 //Aqui vamos abrir o arquivo JSON com o Ano correspondente;
-func CarregarAno(ano int) (MeuCaderno, error) {}
+func CarregarCaderno(ano int) (MeuCaderno, error) {
+
+	var contas string = "ano-" + strconv.Itoa(ano) + ".json"
+	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
+	var MinhasContas MeuCaderno
+
+	if err1 != nil {
+		return MeuCaderno{}, err1
+	}
+
+	Arq1, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_RDONLY | os.O_CREATE, 0644)
+
+	if err != nil {
+		return MeuCaderno{}, err
+	}
+
+	defer Arq1.Close()
+
+	MeuDecoder := json.NewDecoder(Arq1)
+	err = MeuDecoder.Decode(&MinhasContas)
+
+	if err != nil {
+		//Arquivo recem criado (vazio), devolve io.EOF
+
+		if err == io.EOF {
+			//Caderno novo, inicia com os valores padrao!
+			MinhasContas = MeuCaderno{Ano: ano}
+			return MinhasContas, nil
+		}
+
+		return MeuCaderno{}, err
+	}
+
+	return MinhasContas, nil
+}

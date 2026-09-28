@@ -1,0 +1,38 @@
+package spt
+
+import (
+	"encoding/json"
+	"os"
+	"strconv"
+)
+
+//Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
+
+func SalvarCaderno(caderno MeuCaderno) error {
+
+	var contas string = "ano-" + strconv.Itoa(caderno.Ano) + ".json"
+	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
+
+	if err1 != nil {
+		return err1
+	}
+
+	Arq2, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0644)
+
+	if err != nil {
+		return err
+	}
+
+	defer Arq2.Close()
+
+	//DOC = Documento;
+	DOC := json.NewEncoder(Arq2)
+
+	err = DOC.Encode(&caderno)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
