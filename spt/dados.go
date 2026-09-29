@@ -55,40 +55,44 @@ type MinhasTransacoes struct {
 //Comecando a fazer as funcoes agora!
 
 //Aqui vamos abrir o arquivo JSON com o Ano correspondente;
-func CarregarArquivo(ano int) (Arquivos, error) {
+func (MeuArquivo1 *Arquivos) CarregarArquivo(ano int) error {
 
 	var contas string = "ano-" + strconv.Itoa(ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
-	var MinhasContas Arquivos
 
 	if err1 != nil {
-		return Arquivos{}, err1
+		return err1
 	}
 
 	Arq1, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_RDONLY, 0644)
 
 	if err != nil {
-		return Arquivos{}, err
+		return err
 	}
 
 	defer Arq1.Close()
 
+	var CARREGADO Arquivos
+	
 	MeuDecoder := json.NewDecoder(Arq1)
-	err = MeuDecoder.Decode(&MinhasContas)
+	err = MeuDecoder.Decode(&CARREGADO)
 
 	if err != nil {
 		//Arquivo recem criado (vazio), devolve io.EOF
 
 		if err == io.EOF {
 			//Caderno novo, inicia com os valores padrao!
-			MinhasContas = Arquivos{Ano: ano}
-			return MinhasContas, nil
+			*MeuArquivo1 = Arquivos{Ano: ano}
+			return nil
 		}
 
-		return Arquivos{}, err
+		return err
 	}
 
-	return MinhasContas, nil
+	//Aqui atribuimos a nossa struct principal para alterar a variavel global!
+	*MeuArquivo1 = CARREGADO
+
+	return nil
 }
 
 func ListarArquivos() ([]string, error) {
