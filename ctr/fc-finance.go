@@ -53,17 +53,25 @@ func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 			fmt.Println("Salvo com sucesso!")
 			break
 		}
+
+		if Controle == 2 {
+			fmt.Printf("Caminho JA EXISTE!")
+			break
+		}
 	}
 
-	CAMINHO_ARQ, err := spt.SalvarArquivo(*MinhasFinancas)
-
-	if err != nil {
-		fmt.Printf("Nao foi possivel criar o arquivo!")
-	}
+	if Controle == 1 {
+		CAMINHO_ARQ, err := spt.SalvarArquivo(*MinhasFinancas)
 	
-	fmt.Printf("Ano criado! Caminho do arquivo: \n")
-	fmt.Printf("%s", CAMINHO_ARQ)
+		if err != nil {
+			fmt.Printf("Nao foi possivel criar o arquivo!")
+		}
+		
+		fmt.Printf("Ano criado! Caminho do arquivo: \n")
+		fmt.Printf("%s", CAMINHO_ARQ)
+	
+		//Colocando um time somente para aparecer a mensagem de sucesso!
+	}
 
-	//Colocando um time somente para aparecer a mensagem de sucesso!
 	time.Sleep(2 * time.Second)
 }

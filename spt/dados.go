@@ -6,6 +6,7 @@ import (
 	"io"
 	"math"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 )
@@ -64,7 +65,7 @@ func CarregarArquivo(ano int) (Arquivos, error) {
 		return Arquivos{}, err1
 	}
 
-	Arq1, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_RDONLY | os.O_CREATE, 0644)
+	Arq1, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_RDONLY, 0644)
 
 	if err != nil {
 		return Arquivos{}, err
@@ -90,15 +91,61 @@ func CarregarArquivo(ano int) (Arquivos, error) {
 	return MinhasContas, nil
 }
 
+func ListarArquivos() ([]string, error) {
+
+	LISTA_DIRETORIOS := make([]string, 0, 15)
+	Caminho_Do_Cache, err := CaminhoCache()
+
+	if err != nil {
+		return nil, err
+	}
+	
+	err = filepath.WalkDir(Caminho_Do_Cache, func(root string, d os.DirEntry, err error) error {
+
+		if err != nil {
+			return err
+		}
+
+		if !d.IsDir() {
+			LISTA_DIRETORIOS = append(LISTA_DIRETORIOS, root)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return LISTA_DIRETORIOS, nil
+}
 
 func ColocarAno(setAno int, MinhasFinancas *Arquivos) int {
-
 	if setAno < 1800 || setAno > 2800 {		//Duvido que esse programa sobreviva ate 2800;
 		return 0
 	}
 
+	var contas string = "ano-" + strconv.Itoa(setAno) + ".json"
+	CAMINHO_ARQ, err := CaminhoArquivo(contas)
+	ARQUIVOS_DIRETORIO, err1 := ListarArquivos()
+
+	if err != nil {
+		return 0
+	}
+
+	if err1 != nil {
+		return 0
+	}
+
+	//Validando para ver se ja tem um arquivo ja existente;
+	for _, ArqDir := range ARQUIVOS_DIRETORIO {
+		if filepath.Base(ArqDir) == filepath.Base(CAMINHO_ARQ) {
+			return 2
+		}
+	}
+
 	MinhasFinancas.Ano = setAno
-	
+
 	return 1
 }
 
