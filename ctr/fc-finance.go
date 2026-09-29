@@ -29,31 +29,6 @@ func Formatacao() {
 	for i := 0; i < 50; i++ {
 		fmt.Printf("=")
 	}
-
-	fmt.Printf("\n\n")
-}
-
-func MenuPrincipal(MinhasFinancas *spt.Arquivos) {
-
-	for {
-		var controle int
-
-		fmt.Scan(&controle)
-
-		switch controle {
-
-			case 0:
-				fmt.Printf("Abortado!")
-				return
-			
-			case 1:
-				CadastrarAno(MinhasFinancas)
-				
-			default:
-				Formatacao()
-				fmt.Printf("Opcao invalida!! Tente novamente!\n")
-		}
-	}
 }
 
 func CadastrarAno(MinhasFinancas *spt.Arquivos) {
@@ -62,6 +37,7 @@ func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 	var AnoInput int
 
 	Formatacao()
+	fmt.Printf("\n")
 
 	for {
 		fmt.Printf("Digite o ano que deseja colocar: ")
@@ -79,20 +55,15 @@ func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 		}
 	}
 
+	CAMINHO_ARQ, err := spt.SalvarArquivo(*MinhasFinancas)
+
+	if err != nil {
+		fmt.Printf("Nao foi possivel criar o arquivo!")
+	}
+	
+	fmt.Printf("Ano criado! Caminho do arquivo: \n")
+	fmt.Printf("%s", CAMINHO_ARQ)
+
 	//Colocando um time somente para aparecer a mensagem de sucesso!
 	time.Sleep(2 * time.Second)
-}
-
-func AbrirNovoAno() {
-
-	Formatacao()
-	var dataInicio time.Time
-	var dataFim time.Time
-
-	var tempMes int
-	
-	fmt.Printf("Digite o mes de inicio: ")
-	fmt.Scan(&tempMes)
-
-	dataInicio = time.Month(tempMes)
 }

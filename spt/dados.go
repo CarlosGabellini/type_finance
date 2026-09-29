@@ -54,7 +54,7 @@ type MinhasTransacoes struct {
 //Comecando a fazer as funcoes agora!
 
 //Aqui vamos abrir o arquivo JSON com o Ano correspondente;
-func CarregarCaderno(ano int) (Arquivos, error) {
+func CarregarArquivo(ano int) (Arquivos, error) {
 
 	var contas string = "ano-" + strconv.Itoa(ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
@@ -95,7 +95,7 @@ func ColocarAno(setAno int, MinhasFinancas *Arquivos) int {
 
 	if setAno < 1800 || setAno > 2800 {		//Duvido que esse programa sobreviva ate 2800;
 		return 0
-	} 
+	}
 
 	MinhasFinancas.Ano = setAno
 	

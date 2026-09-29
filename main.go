@@ -23,13 +23,36 @@ func main() {
 		fmt.Printf("=")
 	}
 
-	fmt.Printf("\n")
-	fmt.Printf("Seja bem vindo ao seu controle financeiro!\n")
+	for {
+		fmt.Printf("\n")
+		fmt.Printf("Seja bem vindo ao seu controle financeiro!\n")
+	
+		fmt.Printf("Quais opcoes deseja usar para cadastro?\n\n")
+		fmt.Printf("00 - Abortar operacao.\n")
+		fmt.Printf("01 - Cadastrar novo ano.\n")	//Deve somente abrir e cadastrar um ano, e salvar no disco;
+		fmt.Printf("02 - Abrir ano\n")
+	
+		fmt.Printf("\n")
+		
+		var controle int
 
-	fmt.Printf("Quais opcoes deseja usar para cadastro?\n")
-	fmt.Printf("00 - Abortar operacao.\n")
-	fmt.Printf("01 - Cadastrar novo ano.\n")
-	fmt.Printf("02 - Abrir ano\n")
+		fmt.Printf("Digite sua opcao aqui - ")
+		fmt.Scan(&controle)
 
-	ctr.MenuPrincipal(&MeuArquivo)
+		switch controle {
+
+			case 0:
+				fmt.Printf("Abortado!")
+				return
+
+			case 1:
+				ctr.CadastrarAno(&MeuArquivo)
+
+			default:
+				ctr.Formatacao()
+				fmt.Printf("Opcao invalida! Tente novamente!")
+		}
+
+		ctr.Formatacao()			//Limpa o terminal antes de comecar tudo denovo!
+	}
 }

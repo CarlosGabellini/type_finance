@@ -9,19 +9,19 @@ import (
 //Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
 // E mais algumas outras funcoes espalhadas.
 
-func SalvarArquivo(MeuArquivo Arquivos) error {
+func SalvarArquivo(MeuArquivo Arquivos) (string, error) {
 
 	var contas string = "ano-" + strconv.Itoa(MeuArquivo.Ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
 
 	if err1 != nil {
-		return err1
+		return "", err1
 	}
 
 	Arq2, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0644)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	defer Arq2.Close()
@@ -32,10 +32,10 @@ func SalvarArquivo(MeuArquivo Arquivos) error {
 	err = DOC.Encode(&MeuArquivo)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return CAMINHO_ARQUIVO, err
 }
 
 func CalcularPorcentagem(valor float64, total float64) float64 {
