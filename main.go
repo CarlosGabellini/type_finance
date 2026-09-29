@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"type_finance/ctr"
 	"type_finance/spt"
 )
@@ -30,14 +31,23 @@ func main() {
 		fmt.Printf("Quais opcoes deseja usar para cadastro?\n\n")
 		fmt.Printf("00 - Abortar operacao.\n")
 		fmt.Printf("01 - Cadastrar novo ano.\n")	//Deve somente abrir e cadastrar um ano, e salvar no disco;
-		fmt.Printf("02 - Abrir ano\n")
+		fmt.Printf("02 - Abrir ano || Olhar anos.\n")
 	
 		fmt.Printf("\n")
-		
-		var controle int
 
+		for i := 0; i < 50; i++ {
+			fmt.Printf("-")
+		}
+
+		fmt.Printf("\n")
 		fmt.Printf("Digite sua opcao aqui - ")
-		fmt.Scan(&controle)
+		controle, err := strconv.Atoi(ctr.LerLinha())
+
+		if err != nil {
+			ctr.Formatacao()
+			fmt.Printf("Digite apenas numeros!")
+			continue
+		}
 
 		switch controle {
 
@@ -48,9 +58,13 @@ func main() {
 			case 1:
 				ctr.CadastrarAno(&MeuArquivo)
 
+			case 2:
+				ctr.AbrirAnos(&MeuArquivo)
+			
 			default:
 				ctr.Formatacao()
 				fmt.Printf("Opcao invalida! Tente novamente!")
+				return
 		}
 
 		ctr.Formatacao()			//Limpa o terminal antes de comecar tudo denovo!

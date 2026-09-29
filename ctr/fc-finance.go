@@ -1,13 +1,23 @@
 package ctr
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
+	"strings"
 	"time"
 	"type_finance/spt"
 )
+
+var entrada = bufio.NewReader(os.Stdin)
+
+func LerLinha() string {
+	linha, _ := entrada.ReadString('\n')
+	return strings.TrimSpace(linha)
+}
 
 func LimparTela() {
 	var cmd *exec.Cmd
@@ -41,8 +51,13 @@ func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 
 	for {
 		fmt.Printf("Digite o ano que deseja colocar: ")
-		fmt.Scan(&AnoInput)
+		ano, err := strconv.Atoi(LerLinha())
 		
+		if err != nil {
+			fmt.Println("Digite apenas numeros!")
+			continue
+		}
+		AnoInput = ano
 		Controle = spt.ColocarAno(AnoInput, MinhasFinancas)
 
 		if Controle == 0 {
@@ -74,4 +89,44 @@ func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 	}
 
 	time.Sleep(2 * time.Second)
+}
+
+func AbrirAnos(MinhasFinancas *spt.Arquivos) {
+	Formatacao()
+	fmt.Printf("\n")
+
+	for {
+		fmt.Printf("Selecione uma das opcoes abaixo: \n")
+		fmt.Printf("00 - Abortar Operacao\n")
+		fmt.Printf("01 - Mostrar arquivo de anos anteriores\n")
+		fmt.Printf("02 - Abrir algum ano.\n")
+		fmt.Printf("03 - Imprimir tabela de algum ano && mes\n")
+
+		for i := 0; i < 50; i++ {
+			fmt.Printf("-")
+		}
+
+		fmt.Printf("\n")
+		fmt.Printf("Digite sua opcao aqui - ")
+		controle, err := strconv.Atoi(LerLinha())
+
+		if err != nil {
+			fmt.Printf("Digite apenas numeros!")
+			continue
+		}
+
+		switch controle {
+
+			case 0:
+				fmt.Printf("Abortando operacao aqui!")
+				time.Sleep(3 * time.Second)
+				return
+			
+			case 1:
+				MostrarAnosAnteriores()
+				
+			default:
+				fmt.Printf("Numero invalido!")
+		}
+	}
 }
