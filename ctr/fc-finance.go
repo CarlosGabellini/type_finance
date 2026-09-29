@@ -9,21 +9,6 @@ import (
 	"type_finance/spt"
 )
 
-func Saudacao() {
-	
-	for i := 0; i < 50; i++ {
-		fmt.Printf("=")
-	}
-
-	fmt.Printf("\n")
-	fmt.Printf("Seja bem vindo ao seu controle financeiro!\n")
-
-	fmt.Printf("Quais opcoes deseja usar para cadastro?\n")
-	fmt.Printf("00 - Abortar operacao.\n")
-	fmt.Printf("01 - Cadastrar novo ano.\n")
-	fmt.Printf("02 - Abrir ano\n")
-}
-
 func LimparTela() {
 	var cmd *exec.Cmd
 
@@ -39,7 +24,6 @@ func LimparTela() {
 }
 
 func Formatacao() {
-
 	LimparTela()
 	
 	for i := 0; i < 50; i++ {
@@ -49,10 +33,9 @@ func Formatacao() {
 	fmt.Printf("\n\n")
 }
 
-func MenuPrincipal(MinhasFinancas *spt.MeuCaderno) {
+func MenuPrincipal(MinhasFinancas *spt.Arquivos) {
 
 	for {
-		Saudacao()
 		var controle int
 
 		fmt.Scan(&controle)
@@ -65,7 +48,7 @@ func MenuPrincipal(MinhasFinancas *spt.MeuCaderno) {
 			
 			case 1:
 				CadastrarAno(MinhasFinancas)
-
+				
 			default:
 				Formatacao()
 				fmt.Printf("Opcao invalida!! Tente novamente!\n")
@@ -73,7 +56,7 @@ func MenuPrincipal(MinhasFinancas *spt.MeuCaderno) {
 	}
 }
 
-func CadastrarAno(MinhasFinancas *spt.MeuCaderno) {
+func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 
 	var Controle int
 	var AnoInput int
@@ -98,4 +81,18 @@ func CadastrarAno(MinhasFinancas *spt.MeuCaderno) {
 
 	//Colocando um time somente para aparecer a mensagem de sucesso!
 	time.Sleep(2 * time.Second)
+}
+
+func AbrirNovoAno() {
+
+	Formatacao()
+	var dataInicio time.Time
+	var dataFim time.Time
+
+	var tempMes int
+	
+	fmt.Printf("Digite o mes de inicio: ")
+	fmt.Scan(&tempMes)
+
+	dataInicio = time.Month(tempMes)
 }

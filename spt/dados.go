@@ -2,7 +2,9 @@ package spt
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"math"
 	"os"
 	"strconv"
 	"time"
@@ -23,17 +25,21 @@ const (
 	Gasto TipoTransacao = "gasto"
 )
 
-type MeuCaderno struct {
+type Arquivos struct {
 	Ano int `json:"ano"`
+	MeuCaderno []MeuCaderno `json:"cadernos"` 
+}
+
+type MeuCaderno struct {
 	DataInicio time.Time `json:"data_inicio"`
 	DataFim time.Time `json:"data_fim"`
 	SaldoInicial float64 `json:"saldo_inicial"`
 	SaldoFinal float64 `json:"saldo_final"`
-	MeusGastos []Gastos `json:"meus_gastos"`
+	MeusGastos []MinhasTransacoes `json:"meus_gastos"`
 }
 
 
-type Gastos struct {
+type MinhasTransacoes struct {
 	Data time.Time `json:"data"`
 	Valor float64 `json:"valor"`
 	Descricao string `json:"descricao"`
@@ -48,20 +54,20 @@ type Gastos struct {
 //Comecando a fazer as funcoes agora!
 
 //Aqui vamos abrir o arquivo JSON com o Ano correspondente;
-func CarregarCaderno(ano int) (MeuCaderno, error) {
+func CarregarCaderno(ano int) (Arquivos, error) {
 
 	var contas string = "ano-" + strconv.Itoa(ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
-	var MinhasContas MeuCaderno
+	var MinhasContas Arquivos
 
 	if err1 != nil {
-		return MeuCaderno{}, err1
+		return Arquivos{}, err1
 	}
 
 	Arq1, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_RDONLY | os.O_CREATE, 0644)
 
 	if err != nil {
-		return MeuCaderno{}, err
+		return Arquivos{}, err
 	}
 
 	defer Arq1.Close()
@@ -74,18 +80,18 @@ func CarregarCaderno(ano int) (MeuCaderno, error) {
 
 		if err == io.EOF {
 			//Caderno novo, inicia com os valores padrao!
-			MinhasContas = MeuCaderno{Ano: ano}
+			MinhasContas = Arquivos{Ano: ano}
 			return MinhasContas, nil
 		}
 
-		return MeuCaderno{}, err
+		return Arquivos{}, err
 	}
 
 	return MinhasContas, nil
 }
 
 
-func ColocarAno(setAno int, MinhasFinancas *MeuCaderno) int {
+func ColocarAno(setAno int, MinhasFinancas *Arquivos) int {
 
 	if setAno < 1800 || setAno > 2800 {		//Duvido que esse programa sobreviva ate 2800;
 		return 0
@@ -94,4 +100,58 @@ func ColocarAno(setAno int, MinhasFinancas *MeuCaderno) int {
 	MinhasFinancas.Ano = setAno
 	
 	return 1
+}
+
+func (MinhasFinancas *MeuCaderno) ColocarData(setInicio, setFim time.Time) error {
+
+	if setInicio.IsZero() || setFim.IsZero() {
+		PersonError := fmt.Errorf("Data invalida!")
+		return PersonError
+	}
+
+	if setFim.Before(setInicio) {
+		PersonError := fmt.Errorf("Fim antes de inicio! invalido!")
+		return PersonError
+	}
+
+	if setInicio.Year() < 1800 || setFim.Year() > 2800 {
+		PersonError := fmt.Errorf("Data invalida!")
+		return PersonError
+	}
+
+	if setFim.Year() < 1800 || setInicio.Year() > 2800 {
+		PersonError := fmt.Errorf("Data invalida!")
+		return  PersonError
+	}
+
+	MinhasFinancas.DataInicio = setInicio
+	MinhasFinancas.DataFim = setFim
+
+	return nil
+}
+
+//Retorna um novo caderno para a struct devovendo o ultimo indice dele;
+func (a *Arquivos) NovoCaderno(inicio, fim time.Time, saldoInicial float64) (int, error) {
+
+	NOVO_CADERNO := MeuCaderno{}
+
+	if err := NOVO_CADERNO.ColocarData(inicio, fim); err != nil {
+		return -1, err
+	}
+
+	NOVO_CADERNO.DefinirSaldoInicial(saldoInicial)
+
+	a.MeuCaderno = append(a.MeuCaderno, NOVO_CADERNO)
+
+	return len(a.MeuCaderno) - 1, nil
+}
+
+func (MinhasFin *MeuCaderno) DefinirSaldoInicial(setSaldo float64) {
+	NovoSaldo := (math.Round(setSaldo * 100)) / 100
+	MinhasFin.SaldoInicial = NovoSaldo
+}
+
+func (MinhasFin *MeuCaderno) DefinirSaldoFinal(setSaldo float64) {
+	_NovoSaldoFinal := (math.Round(setSaldo * 100)) / 100
+	MinhasFin.SaldoFinal = _NovoSaldoFinal
 }

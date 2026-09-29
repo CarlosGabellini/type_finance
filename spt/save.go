@@ -9,9 +9,9 @@ import (
 //Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
 // E mais algumas outras funcoes espalhadas.
 
-func SalvarCaderno(caderno MeuCaderno) error {
+func SalvarArquivo(MeuArquivo Arquivos) error {
 
-	var contas string = "ano-" + strconv.Itoa(caderno.Ano) + ".json"
+	var contas string = "ano-" + strconv.Itoa(MeuArquivo.Ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
 
 	if err1 != nil {
@@ -29,7 +29,7 @@ func SalvarCaderno(caderno MeuCaderno) error {
 	//DOC = Documento;
 	DOC := json.NewEncoder(Arq2)
 
-	err = DOC.Encode(&caderno)
+	err = DOC.Encode(&MeuArquivo)
 
 	if err != nil {
 		return err
