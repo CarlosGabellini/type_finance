@@ -12,16 +12,9 @@ import (
 
 //spt significa suporte!
 
-type Categoria string
 type TipoTransacao string
 
 const (
-	Superfluo Categoria = "superfluo"
-	ContaCasa Categoria = "conta_casa"
-	Saude Categoria = "saude"
-	Moradia Categoria = "moradia"
-	Lazer Categoria = "lazer"
-	Pormenores Categoria = "pormenores"
 	Ganho TipoTransacao = "ganho"
 	Gasto TipoTransacao = "gasto"
 )
@@ -45,7 +38,6 @@ type MinhasTransacoes struct {
 	Data time.Time `json:"data"`
 	Valor float64 `json:"valor"`	
 	Descricao string `json:"descricao"`
-	Categoria Categoria `json:"categoria"`
 	Parcelado bool `json:"parcelado"`
 	NumeroParcelas int `json:"numero_parcelas"`
 	Porcentagem float64	`json:"porcentagem"` 	//Em relacao a algum salario fixo!
@@ -57,7 +49,8 @@ type MinhasTransacoes struct {
 
 //Aqui vamos abrir o arquivo JSON com o Ano correspondente;
 func (MeuArquivo1 *Arquivos) CarregarArquivo(ano int) error {
-
+	
+	//Aqui prescisa mecher com um ponteiro para alterar a struct original;
 	var contas string = "ano-" + strconv.Itoa(ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
 
@@ -65,6 +58,7 @@ func (MeuArquivo1 *Arquivos) CarregarArquivo(ano int) error {
 		return err1
 	}
 
+	//ReadOnly por que nao prescisamos alterar o arquivo, somente ler ele;
 	Arq1, err := os.OpenFile(CAMINHO_ARQUIVO, os.O_RDONLY, 0644)
 
 	if err != nil {

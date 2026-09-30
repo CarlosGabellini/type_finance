@@ -66,4 +66,4 @@ func CadastrarNovoMes(MinhasFin *spt.Arquivos, ano int) {
 	}
 	
 	fmt.Printf("Mês %s cadastrado (índice %d)\n", proximo.Format("01/2006"), indice)
-} 
+}

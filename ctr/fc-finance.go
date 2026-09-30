@@ -205,7 +205,7 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 
 	for {
 		fmt.Printf("\n")
-		fmt.Printf("Bem vindo! O que deseja fazer?")
+		fmt.Printf("Bem vindo! O que deseja fazer?\n")
 
 		fmt.Printf("0 - Abortar\n")
 		fmt.Printf("01 - Cadastrar novo mes\n")

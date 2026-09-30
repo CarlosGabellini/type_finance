@@ -10,6 +10,15 @@ import (
 //Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
 // E mais algumas outras funcoes espalhadas.
 
+/*---------------------------------------------- Avisos --------------------------------------------------/
+		Eh importante distinguir quando eu presciso alterar a struct original com ponteiro e distinguir
+	quando NAO presciso usar um ponteiro para o original, nesse caso aqui, na hora de salvar o arquivo
+	eu nao presciso usar a struct original, por que isso vira o ponteiro do ponteiro na hora de salvar,
+	tudo o que eu prescisava era criar uma copia para salvar ela no meu disco.
+//-------------------------------------------------------------------------------------------------------/
+ */
+
+//Salva o ano retornando o caminho do arquivo e um erro caso nao tenha conseguido fazer;
 func (MeuArquivo Arquivos) SalvarAno() (string, error) {
 
 	var contas string = "ano-" + strconv.Itoa(MeuArquivo.Ano) + ".json"
