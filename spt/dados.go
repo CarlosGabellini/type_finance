@@ -43,6 +43,7 @@ type MeuCaderno struct {
 type MinhasTransacoes struct {
 	Data time.Time `json:"data"`
 	Valor float64 `json:"valor"`
+	ValorRef float64 `json:"valorRef"`			//Valor de referencia usado para as porcentagem;	
 	Descricao string `json:"descricao"`
 	Categoria Categoria `json:"categoria"`
 	Parcelado bool `json:"parcelado"`
@@ -182,27 +183,24 @@ func (MinhasFinancas *MeuCaderno) ColocarData(setInicio, setFim time.Time) error
 }
 
 //Retorna um novo caderno para a struct devovendo o ultimo indice dele;
-func (a *Arquivos) NovoCaderno(inicio, fim time.Time, saldoInicial float64) (int, error) {
+func (a *Arquivos) NovoCaderno(inicio, fim time.Time) (int, error) {
 
 	NOVO_CADERNO := MeuCaderno{}
 
 	if err := NOVO_CADERNO.ColocarData(inicio, fim); err != nil {
 		return -1, err
 	}
-
-	NOVO_CADERNO.DefinirSaldoInicial(saldoInicial)
-
+	
 	a.MeuCaderno = append(a.MeuCaderno, NOVO_CADERNO)
 
 	return len(a.MeuCaderno) - 1, nil
 }
 
-func (MinhasFin *MeuCaderno) DefinirSaldoInicial(setSaldo float64) {
-	NovoSaldo := (math.Round(setSaldo * 100)) / 100
-	MinhasFin.SaldoInicial = NovoSaldo
+//Define o saldo inicial do nosso arquivo em que estamos trabalhando.
+func (MinhasFin *Arquivos) DefinirSaldoInicial(setSaldo float64, indice int) {
+	MinhasFin.MeuCaderno[indice].SaldoInicial = Arredondamento2Digitos(setSaldo)
 }
 
-func (MinhasFin *MeuCaderno) DefinirSaldoFinal(setSaldo float64) {
-	_NovoSaldoFinal := (math.Round(setSaldo * 100)) / 100
-	MinhasFin.SaldoFinal = _NovoSaldoFinal
+func (MinhasFin *Arquivos) DefinirSaldoFinal(setSaldo float64, indice int) {
+	MinhasFin.MeuCaderno[indice].SaldoFinal = Arredondamento2Digitos(setSaldo)
 }

@@ -2,6 +2,7 @@ package spt
 
 import (
 	"encoding/json"
+	"math"
 	"os"
 	"strconv"
 )
@@ -38,6 +39,15 @@ func SalvarArquivo(MeuArquivo Arquivos) (string, error) {
 	return CAMINHO_ARQUIVO, err
 }
 
+//Retorna a porcentagem de um valor de referencia;
 func CalcularPorcentagem(valor float64, total float64) float64 {
-	return (valor * 100) / total
+	NovoValor := (math.Round(valor * 100)) / 100		//Usar prescisao de duas casas decimais;
+	NovoTotal := (math.Round(total * 100)) / 100
+
+	return (NovoValor * 100) / NovoTotal
+}
+
+//Retorna um arrendodamento de 2 digitos para float64, exemplo: 3.1517 -> 3.15;
+func Arredondamento2Digitos(valor float64) float64 {
+	return (math.Round(valor * 100)) / 100
 }

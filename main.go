@@ -56,7 +56,8 @@ func main() {
 				return
 
 			case 1:
-				ctr.CadastrarAno(&MeuArquivo)
+				var NovoArquivo spt.Arquivos
+				ctr.CadastrarAno(&NovoArquivo)
 
 			case 2:
 				ctr.AbrirAnos(&MeuArquivo)

@@ -93,9 +93,10 @@ func CadastrarAno(MinhasFinancas *spt.Arquivos) {
 
 func AbrirAnos(MinhasFinancas *spt.Arquivos) {
 	Formatacao()
-	fmt.Printf("\n")
 
 	for {
+		fmt.Printf("\n")
+		
 		fmt.Printf("Selecione uma das opcoes abaixo: \n")
 		fmt.Printf("00 - Abortar Operacao\n")
 		fmt.Printf("01 - Mostrar arquivo de anos anteriores\n")
@@ -128,5 +129,7 @@ func AbrirAnos(MinhasFinancas *spt.Arquivos) {
 			default:
 				fmt.Printf("Numero invalido!")
 		}
+
+		Formatacao()
 	}
 }
