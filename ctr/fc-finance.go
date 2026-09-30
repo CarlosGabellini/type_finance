@@ -210,6 +210,7 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 		fmt.Printf("0 - Abortar\n")
 		fmt.Printf("01 - Cadastrar novo mes\n")
 		fmt.Printf("02 - Abrir novo mes\n")
+		fmt.Printf("03 - Ver meses cadastrados\n")
 
 		for i := 0; i < 50; i++ {
 			fmt.Printf("-")
@@ -234,6 +235,15 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 			case 1:
 				CadastrarNovoMes(MinhasFin, MinhasFin.Ano)
 				time.Sleep(2 * time.Second)
+
+			case 3:
+				VerMesesCadastrados(MinhasFin)
+
+			default:
+				fmt.Printf("Entrada errada! tente novamente!")
+				continue
 		}
+
+		Formatacao()
 	}
 }

@@ -67,3 +67,19 @@ func CadastrarNovoMes(MinhasFin *spt.Arquivos, ano int) {
 	
 	fmt.Printf("Mês %s cadastrado (índice %d)\n", proximo.Format("01/2006"), indice)
 }
+
+func VerMesesCadastrados(MinhasFin *spt.Arquivos) {
+
+	Formatacao()
+	fmt.Printf("\nAqui estao os meses cadastrados: \n")
+
+	for _, meses := range MinhasFin.MeuCaderno {
+		fmt.Printf("Mes - %s\t\t|Aberto: %t\n", meses.Mes, meses.Aberto)
+	}
+
+	fmt.Printf("\n\n")
+	fmt.Printf("Este sao os meses cadastrados!\n")
+	fmt.Printf("Aperte enter para voltar....")
+
+	LerLinha()
+}

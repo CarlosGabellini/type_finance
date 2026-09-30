@@ -14,6 +14,13 @@ import (
 
 type TipoTransacao string
 
+
+//Nao altere este slice!
+var NOMES_DOS_MESES = [...]string{
+	"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+	"Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+}
+
 const (
 	Ganho TipoTransacao = "ganho"
 	Gasto TipoTransacao = "gasto"
@@ -27,10 +34,12 @@ type Arquivos struct {
 type MeuCaderno struct {
 	DataInicio time.Time `json:"data_inicio"`
 	DataFim time.Time `json:"data_fim"`
+	Mes string `json:"mes"`
 	SaldoInicial float64 `json:"saldo_inicial"`
 	SaldoFinal float64 `json:"saldo_final"`
 	ValorRef float64 `json:"valorRef"`			//Valor de referencia usado para as porcentagem;
-	MeusGastos []MinhasTransacoes `json:"meus_gastos"`
+	Aberto bool `json:"aberto"`					//Aberto ou fechado significa que o mes nao pode mais
+	MeusGastos []MinhasTransacoes `json:"meus_gastos"`		//ser alterado;
 }
 
 
@@ -38,8 +47,6 @@ type MinhasTransacoes struct {
 	Data time.Time `json:"data"`
 	Valor float64 `json:"valor"`	
 	Descricao string `json:"descricao"`
-	Parcelado bool `json:"parcelado"`
-	NumeroParcelas int `json:"numero_parcelas"`
 	Porcentagem float64	`json:"porcentagem"` 	//Em relacao a algum salario fixo!
 	Transacao TipoTransacao `json:"transacao"`
 	ID int `json:"ID"`
@@ -184,6 +191,10 @@ func (a *Arquivos) NovoCaderno(inicio, fim time.Time) (int, error) {
 	if err := NOVO_CADERNO.ColocarData(inicio, fim); err != nil {
 		return -1, err
 	}
+
+	NOVO_CADERNO.Aberto = true
+	NOVO_CADERNO.Mes = NOMES_DOS_MESES[inicio.Month() - 1]
+	//Time.Month vai de 1 a 12, entao prescisa ser -1 para que o array funcione corretamente;
 	
 	a.MeuCaderno = append(a.MeuCaderno, NOVO_CADERNO)
 
