@@ -202,8 +202,20 @@ func (a *Arquivos) NovoCaderno(inicio, fim time.Time) (int, error) {
 }
 
 //Define o saldo inicial do nosso arquivo em que estamos trabalhando.
-func (MinhasFin *Arquivos) DefinirSaldoInicial(setSaldo float64, indice int) {
-	MinhasFin.MeuCaderno[indice].SaldoInicial = Arredondamento2Digitos(setSaldo)
+func (MinhasFin *Arquivos) DefinirSaldoInicial(setSaldo float64, MesIndice int) {
+
+	if MinhasFin.MeuCaderno[MesIndice].SaldoInicial != 0 {
+		fmt.Printf("Saldo ja cadastrado! deseja realmente alterar?")
+		time.Sleep(1 * time.Second)
+		return
+	}
+	
+	MinhasFin.MeuCaderno[MesIndice].SaldoInicial = setSaldo
+	NovoSaldo := MinhasFin.MeuCaderno[MesIndice].SaldoInicial
+	
+	fmt.Printf("Saldo guardado com sucesso! Valor: %.2f\n", NovoSaldo)
+
+	time.Sleep(1 * time.Second)
 }
 
 func (MinhasFin *Arquivos) DefinirSaldoFinal(setSaldo float64, indice int) {

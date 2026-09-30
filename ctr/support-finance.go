@@ -73,6 +73,9 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 
 	//Isso daqui serve para caso digitar janeiro, ao inves de digitar 0 posso digitar 1;
 	Mes := MesInput - 1
+
+	//A variavel de indice se encontra abaixo para manipular os slices do caderno devidamente!
+	//var indice int
 	
 	//Essa condicao eh necessaria para que nao de panic ou slice fora do range;
 	if Mes > 13 || Mes < 0 || Mes >= len(MinhasFin.MeuCaderno) {
@@ -100,11 +103,14 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 		fmt.Printf("--------------------- Funcionalidades do Mes e cadastro -------------------------\n")
 
 		fmt.Printf("\t0 - Abortar operacao.\n")
-		fmt.Printf("\t01 - Cadastrar Receita/Despesa\n")
-		fmt.Printf("\t02 - Excluir Receita/Despesa\n")
-		fmt.Printf("\t03 - Imprimir tabela de receita e despesa do mes\n")
-		fmt.Printf("\t04 - Calcular o pormenor\n")		//Descricao de itens que nao queremos registrar.
-		fmt.Printf("\t05 - Fazer o fechamento do mes\n")
+		fmt.Printf("\t01 - Definir saldo inicial.\n")
+		fmt.Printf("\t02 - Cadastrar Receita/Despesa\n")
+		fmt.Printf("\t03 - Excluir Receita/Despesa\n")
+		fmt.Printf("\t04 - Imprimir tabela de receita e despesa do mes\n")
+		fmt.Printf("\t05 - Calcular o pormenor\n")		//Descricao de itens que nao queremos registrar.
+		fmt.Printf("\t06 - Definir o saldo final\n")
+		fmt.Printf("\t07 - Fazer o fechamento do mes\n")
+		fmt.Printf("\t08 - Fazer o salvamento || checkpoint\n")
 
 		PersonalizarTerminal()
 		fmt.Printf("\n")
@@ -123,6 +129,30 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				fmt.Printf("Abortando....")
 				time.Sleep(2 * time.Second)
 				return
+
+			case 1:
+				fmt.Printf("Digite o valor do saldo inicial do mes - ")
+				saldoInicial, err := strconv.ParseFloat(LerLinha(), 64)
+
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+				
+				MinhasFin.DefinirSaldoInicial(saldoInicial, Mes)
+
+			case 8:
+				Caminho, err := MinhasFin.SalvarAno()
+
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Printf("Arquivo salvo!\n")
+				fmt.Printf("Caminho: %s\n", Caminho)
+				time.Sleep(2 * time.Second)
 
 			default:
 				fmt.Printf("Entrada invalida!")
