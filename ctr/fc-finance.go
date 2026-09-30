@@ -236,6 +236,18 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 				CadastrarNovoMes(MinhasFin, MinhasFin.Ano)
 				time.Sleep(2 * time.Second)
 
+			case 2:
+				fmt.Printf("Digite o numero do mes que deseja abrir: ")
+				Mes_selecionado, err := strconv.Atoi(LerLinha())
+
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+				
+				AbrirNovoMes(MinhasFin, Mes_selecionado)
+				time.Sleep(2 * time.Second)
+
 			case 3:
 				VerMesesCadastrados(MinhasFin)
 

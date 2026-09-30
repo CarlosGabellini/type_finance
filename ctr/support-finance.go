@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"text/tabwriter"
 	"time"
 	"type_finance/spt"
@@ -66,6 +67,70 @@ func CadastrarNovoMes(MinhasFin *spt.Arquivos, ano int) {
 	}
 	
 	fmt.Printf("Mês %s cadastrado (índice %d)\n", proximo.Format("01/2006"), indice)
+}
+
+func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
+
+	//Isso daqui serve para caso digitar janeiro, ao inves de digitar 0 posso digitar 1;
+	Mes := MesInput - 1
+	
+	//Essa condicao eh necessaria para que nao de panic ou slice fora do range;
+	if Mes > 13 || Mes < 0 || Mes >= len(MinhasFin.MeuCaderno) {
+		fmt.Printf("Este mes ainda nao foi criado || mes invalido!")
+		return
+	}
+
+	if !MinhasFin.MeuCaderno[Mes].Aberto {
+		fmt.Printf("Mes fechado! Impossivel fazer alteracoes nele!")
+		return
+	}
+
+	if MinhasFin.MeuCaderno[Mes].Mes == "" {
+		fmt.Printf("Este mes ainda nao foi criado || mes invalido!!")
+		return
+	}
+	
+	Formatacao()
+
+	//Essa funcao tem como objetivo abrir o mes e ter algumas funcionalidades, desde mostrar a tabela,
+	// cadastrar receitas e despesas, e muito mais!
+
+	for {
+		fmt.Printf("\n")
+		fmt.Printf("--------------------- Funcionalidades do Mes e cadastro -------------------------\n")
+
+		fmt.Printf("\t0 - Abortar operacao.\n")
+		fmt.Printf("\t01 - Cadastrar Receita/Despesa\n")
+		fmt.Printf("\t02 - Excluir Receita/Despesa\n")
+		fmt.Printf("\t03 - Imprimir tabela de receita e despesa do mes\n")
+		fmt.Printf("\t04 - Calcular o pormenor\n")		//Descricao de itens que nao queremos registrar.
+		fmt.Printf("\t05 - Fazer o fechamento do mes\n")
+
+		PersonalizarTerminal()
+		fmt.Printf("\n")
+
+		fmt.Printf("Digite sua opcao - ")
+		controle, err := strconv.Atoi(LerLinha())
+
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		switch controle {
+
+			case 0:
+				fmt.Printf("Abortando....")
+				time.Sleep(2 * time.Second)
+				return
+
+			default:
+				fmt.Printf("Entrada invalida!")
+				continue
+		}
+
+		Formatacao()
+	}
 }
 
 func VerMesesCadastrados(MinhasFin *spt.Arquivos) {
