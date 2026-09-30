@@ -10,7 +10,7 @@ import (
 //Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
 // E mais algumas outras funcoes espalhadas.
 
-func SalvarArquivo(MeuArquivo Arquivos) (string, error) {
+func (MeuArquivo Arquivos) SalvarAno() (string, error) {
 
 	var contas string = "ano-" + strconv.Itoa(MeuArquivo.Ano) + ".json"
 	CAMINHO_ARQUIVO, err1 := CaminhoArquivo(contas)
@@ -29,7 +29,7 @@ func SalvarArquivo(MeuArquivo Arquivos) (string, error) {
 
 	//DOC = Documento;
 	DOC := json.NewEncoder(Arq2)
-
+	DOC.SetIndent("", "  ")
 	err = DOC.Encode(&MeuArquivo)
 
 	if err != nil {
@@ -41,8 +41,8 @@ func SalvarArquivo(MeuArquivo Arquivos) (string, error) {
 
 //Retorna a porcentagem de um valor de referencia;
 func CalcularPorcentagem(valor float64, total float64) float64 {
-	NovoValor := (math.Round(valor * 100)) / 100		//Usar prescisao de duas casas decimais;
-	NovoTotal := (math.Round(total * 100)) / 100
+	NovoValor := Arredondamento2Digitos(valor)
+	NovoTotal := Arredondamento2Digitos(total)
 
 	return (NovoValor * 100) / NovoTotal
 }

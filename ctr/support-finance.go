@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"text/tabwriter"
+	"time"
 	"type_finance/spt"
 )
 
@@ -35,3 +36,34 @@ func MostrarAnosAnteriores() {
 	fmt.Printf("\nPressione enter para sair...")
 	LerLinha()
 }
+
+func CadastrarNovoMes(MinhasFin *spt.Arquivos, ano int) {
+
+	var proximo time.Time
+
+	if len(MinhasFin.MeuCaderno) == 0 {
+		proximo = time.Date(ano, time.January, 1, 0, 0, 0, 0, time.Local)
+
+	} else {
+		// Pega o último caderno e avança 1 mês a partir do início dele
+		ultimo := MinhasFin.MeuCaderno[len(MinhasFin.MeuCaderno) - 1]
+
+		if ultimo.DataInicio.Month() == time.December {
+			fmt.Println("Todos os meses ja estao cadastrados!")
+			return
+		}
+
+		proximo = time.Date(ultimo.DataInicio.Year(), ultimo.DataInicio.Month() + 1, 1, 0, 0, 0, 0, time.Local)
+	}
+
+	fim := proximo.AddDate(0, 1, -1)
+
+	indice, err := MinhasFin.NovoCaderno(proximo, fim)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	
+	fmt.Printf("Mês %s cadastrado (índice %d)\n", proximo.Format("01/2006"), indice)
+} 

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -22,6 +21,7 @@ const (
 	Saude Categoria = "saude"
 	Moradia Categoria = "moradia"
 	Lazer Categoria = "lazer"
+	Pormenores Categoria = "pormenores"
 	Ganho TipoTransacao = "ganho"
 	Gasto TipoTransacao = "gasto"
 )
@@ -36,14 +36,14 @@ type MeuCaderno struct {
 	DataFim time.Time `json:"data_fim"`
 	SaldoInicial float64 `json:"saldo_inicial"`
 	SaldoFinal float64 `json:"saldo_final"`
+	ValorRef float64 `json:"valorRef"`			//Valor de referencia usado para as porcentagem;
 	MeusGastos []MinhasTransacoes `json:"meus_gastos"`
 }
 
 
 type MinhasTransacoes struct {
 	Data time.Time `json:"data"`
-	Valor float64 `json:"valor"`
-	ValorRef float64 `json:"valorRef"`			//Valor de referencia usado para as porcentagem;	
+	Valor float64 `json:"valor"`	
 	Descricao string `json:"descricao"`
 	Categoria Categoria `json:"categoria"`
 	Parcelado bool `json:"parcelado"`
