@@ -46,7 +46,7 @@ type MeuCaderno struct {
 type MinhasTransacoes struct {
 	Data time.Time `json:"data"`
 	Valor float64 `json:"valor"`	
-	Descricao string `json:"descricao"`
+	Descricao string `json:"descricao"`			//Somente descricao eh importante, sem prescisar de categoria;
 	Porcentagem float64	`json:"porcentagem"` 	//Em relacao a algum salario fixo!
 	Transacao TipoTransacao `json:"transacao"`
 	ID int `json:"ID"`
@@ -220,4 +220,26 @@ func (MinhasFin *Arquivos) DefinirSaldoInicial(setSaldo float64, MesIndice int) 
 
 func (MinhasFin *Arquivos) DefinirSaldoFinal(setSaldo float64, indice int) {
 	MinhasFin.MeuCaderno[indice].SaldoFinal = Arredondamento2Digitos(setSaldo)
+}
+
+func (MinhasFin *Arquivos) DefinirValorRef(setValor float64, indice int) {
+
+	if MinhasFin.MeuCaderno[indice].ValorRef != 0 {
+		fmt.Printf("Deseja alterar o valor de referencia? ja tem um cadastrado.")
+		time.Sleep(2 * time.Second)
+		return
+	}
+
+	MinhasFin.MeuCaderno[indice].ValorRef = setValor
+	MeuValor := MinhasFin.MeuCaderno[indice].ValorRef
+
+	fmt.Printf("Valor de referencia salvo - %.2f\n", MeuValor)
+	time.Sleep(2 * time.Second)
+}
+
+func (MeuCaderno *MeuCaderno) DefinirUmaNovaTransacao() (int) {
+	Nova := MinhasTransacoes{}
+	MeuCaderno.MeusGastos = append(MeuCaderno.MeusGastos, Nova)
+
+	return len(MeuCaderno.MeusGastos) - 1
 }

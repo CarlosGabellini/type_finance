@@ -42,7 +42,6 @@ func Formatacao() {
 }
 
 func PersonalizarTerminal() {
-
 	for i := 0; i < 50; i++ {
 		fmt.Printf("-")
 	}

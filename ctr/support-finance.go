@@ -104,13 +104,14 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 
 		fmt.Printf("\t0 - Abortar operacao.\n")
 		fmt.Printf("\t01 - Definir saldo inicial.\n")
-		fmt.Printf("\t02 - Cadastrar Receita/Despesa\n")
-		fmt.Printf("\t03 - Excluir Receita/Despesa\n")
-		fmt.Printf("\t04 - Imprimir tabela de receita e despesa do mes\n")
-		fmt.Printf("\t05 - Calcular o pormenor\n")		//Descricao de itens que nao queremos registrar.
-		fmt.Printf("\t06 - Definir o saldo final\n")
-		fmt.Printf("\t07 - Fazer o fechamento do mes\n")
-		fmt.Printf("\t08 - Fazer o salvamento || checkpoint\n")
+		fmt.Printf("\t02 - Definir valor referencia\n")
+		fmt.Printf("\t03 - Cadastrar Receita/Despesa\n")
+		fmt.Printf("\t04 - Excluir Receita/Despesa\n")
+		fmt.Printf("\t05 - Imprimir tabela de receita e despesa do mes\n")
+		fmt.Printf("\t06 - Calcular o pormenor\n")		//Descricao de itens que nao queremos registrar.
+		fmt.Printf("\t07 - Definir o saldo final\n")
+		fmt.Printf("\t08 - Fazer o fechamento do mes\n")
+		fmt.Printf("\t09 - Fazer o salvamento || checkpoint\n")
 
 		PersonalizarTerminal()
 		fmt.Printf("\n")
@@ -132,16 +133,34 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 
 			case 1:
 				fmt.Printf("Digite o valor do saldo inicial do mes - ")
-				saldoInicial, err := strconv.ParseFloat(LerLinha(), 64)
+				saldoInicial, err1 := strconv.ParseFloat(LerLinha(), 64)
 
-				if err != nil {
+				if err1 != nil {
 					fmt.Println(err)
+					time.Sleep(2 * time.Second)
 					continue
 				}
 				
 				MinhasFin.DefinirSaldoInicial(saldoInicial, Mes)
 
-			case 8:
+			case 2:
+				fmt.Printf("Digite o valor do saldo de referencia - ")
+				ref, err2 := strconv.ParseFloat(LerLinha(), 64)
+
+				if err2 != nil {
+					fmt.Println(err2)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				MinhasFin.DefinirValorRef(ref, Mes)
+				continue
+
+			case 3:
+				CadastrarReceitaDespesa(MinhasFin, Mes)
+				continue
+
+			case 9:
 				Caminho, err := MinhasFin.SalvarAno()
 
 				if err != nil {
@@ -157,6 +176,67 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 			default:
 				fmt.Printf("Entrada invalida!")
 				continue
+		}
+
+		Formatacao()
+	}
+}
+
+func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
+
+	Formatacao()
+
+	//Criando um nova struct que aponta diretamente para a original, deixa o codigo menos verboso;
+	MeuCaderno := &MinhasFin.MeuCaderno[mes]
+
+	for {
+		fmt.Printf("\n")
+		
+		fmt.Printf("------------ Bem vindo ao cadastro de receitas/despesas -----------------\n\n")
+		fmt.Printf("As opcoes encontram-se abaixo:\n")
+		fmt.Printf("\t 0 - Abortar\n")
+		fmt.Printf("\t 01 - Criar uma nova receita/despesa\n")
+		fmt.Printf("\t 02 - alterar uma receita/despesa existente\n")
+		fmt.Printf("\t 03 - Colocar gasto ou despesa\n")
+		fmt.Printf("\t 04 - Colocar data\n")
+		fmt.Printf("\t 05 - Colocar o valor\n")
+		fmt.Printf("\t 06 - Colocar descricao\n")
+		fmt.Printf("\t 07 - Ver as receitas que tenho\n")
+		fmt.Printf("\t 08 - Salvar\n")
+		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
+
+		PersonalizarTerminal()
+
+		fmt.Printf("\nDigite sua opcao - ")
+		controle, err := strconv.Atoi(LerLinha())
+
+		var indice int = -1
+
+		if err != nil {
+			fmt.Println(err)
+			time.Sleep(2 * time.Second)
+			continue
+		}
+
+		switch controle {
+
+			case 0:
+				fmt.Printf("Abortando operation.....")
+				time.Sleep(2 * time.Second)
+				return
+
+			case 1:
+				fmt.Printf("Fazendo o seu cadastro...")
+				indice = MeuCaderno.DefinirUmaNovaTransacao()
+				fmt.Printf("Criado o cadastro! - indice %d\n", indice)
+				
+				time.Sleep(2 * time.Second)
+				continue
+				
+			default:
+				fmt.Printf("Entrada invalida! digite novamente!")
+				time.Sleep(2 * time.Second)
+				continue				
 		}
 
 		Formatacao()
