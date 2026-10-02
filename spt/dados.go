@@ -343,3 +343,25 @@ func (MeuCard *MeuCaderno) AtualizarPorcentagemRef(indice int, setvalor float64)
 
 	return nil
 }
+
+func (MeuCard *MeuCaderno) CalcularSaldoFinal() float64 {
+
+	MeuSaldoAtual := Arredondamento2Digitos(MeuCard.SaldoInicial)
+
+	for _, calc := range MeuCard.MeusGastos {
+
+		if calc.Transacao == Ganho {
+			MeuSaldoAtual += Arredondamento2Digitos(calc.Valor)
+		}
+
+		if calc.Transacao == Gasto {
+			MeuSaldoAtual -= Arredondamento2Digitos(calc.Valor)
+		}
+
+		if calc.Transacao == "" {
+			continue
+		}
+	}
+
+	return Arredondamento2Digitos(MeuSaldoAtual)
+}

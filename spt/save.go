@@ -57,7 +57,9 @@ func CalcularPorcentagem(valor float64, total float64) float64 {
 	NovoValor := Arredondamento2Digitos(valor)
 	NovoTotal := Arredondamento2Digitos(total)
 
-	return (NovoValor * 100) / NovoTotal
+	Calc := Arredondamento2Digitos((NovoValor * 100) / NovoTotal)
+
+	return Calc
 }
 
 //Retorna um arrendodamento de 2 digitos para float64, exemplo: 3.1517 -> 3.15;
@@ -68,7 +70,9 @@ func Arredondamento2Digitos(valor float64) float64 {
 func CalcularIDMaior(arq2 *Arquivos) int {
 
 	var MeuID int = 0
-	
+
+	//Duplo for para percorrer todos os cadernos e todos os gastos, onde MeuID sempre vai em ordem
+	// crescente;
 	for _, Cadernos := range arq2.MeuCaderno {
 		for _, gastos := range Cadernos.MeusGastos {
 			if MeuID < gastos.ID {

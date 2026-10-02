@@ -204,7 +204,8 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 04 - Definir valor && data\n")
 		fmt.Printf("\t 05 - Colocar descricao\n")
 		fmt.Printf("\t 06 - Ver as receitas que tenho\n")
-		fmt.Printf("\t 07 - Salvar\n")
+		fmt.Printf("\t 07 - Ver saldo atual\n")
+		fmt.Printf("\t 08 - Salvar\n")
 		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
 
 		PersonalizarTerminal()
@@ -365,6 +366,13 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 
 				fmt.Println("A descricao foi devidamente colocada!")
 				time.Sleep(1 * time.Second)
+				continue
+
+			case 7:
+				fmt.Printf("Saldo atual encontra-se abaixo: ")
+				fmt.Printf("%.2f\n", MeuCaderno.CalcularSaldoFinal())
+
+				time.Sleep(3 * time.Second)
 				continue
 				
 			default:
