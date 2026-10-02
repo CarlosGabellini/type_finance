@@ -189,6 +189,9 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 	//Criando um nova struct que aponta diretamente para a original, deixa o codigo menos verboso;
 	MeuCaderno := &MinhasFin.MeuCaderno[mes]
 
+	//O indice deve ser colocado aqui fora para ele nao sofrer reatribuicao de valor toda hora!
+	var indice int = -1
+	
 	for {
 		fmt.Printf("\n")
 		
@@ -198,8 +201,7 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 01 - Criar uma nova receita/despesa\n")
 		fmt.Printf("\t 02 - alterar uma receita/despesa existente\n")
 		fmt.Printf("\t 03 - Colocar gasto ou despesa\n")
-		fmt.Printf("\t 04 - Colocar data\n")
-		fmt.Printf("\t 05 - Colocar o valor\n")
+		fmt.Printf("\t 04 - Definir valor && data\n")
 		fmt.Printf("\t 06 - Colocar descricao\n")
 		fmt.Printf("\t 07 - Ver as receitas que tenho\n")
 		fmt.Printf("\t 08 - Salvar\n")
@@ -209,8 +211,6 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 
 		fmt.Printf("\nDigite sua opcao - ")
 		controle, err := strconv.Atoi(LerLinha())
-
-		var indice int = -1
 
 		if err != nil {
 			fmt.Println(err)
@@ -227,16 +227,103 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 
 			case 1:
 				fmt.Printf("Fazendo o seu cadastro...")
-				indice = MeuCaderno.DefinirUmaNovaTransacao()
+				indice = MeuCaderno.DefinirUmaNovaTransacao(MinhasFin)
 				fmt.Printf("Criado o cadastro! - indice %d\n", indice)
+				fmt.Printf("Id do cadastro - %d\n", MeuCaderno.MeusGastos[indice].ID)
 				
+				time.Sleep(2 * time.Second)
+				continue
+
+
+			case 3:
+				fmt.Printf("Colocando o gasto/receita\n")
+				fmt.Printf("gasto - 1\tReceita - 0\n")
+				controle2, err3 := strconv.Atoi(LerLinha())
+
+				if err3 != nil {
+					fmt.Println(err3)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+				
+				mostrador := MeuCaderno.DefinirReceitaGasto(indice, controle2)
+
+				if mostrador == -1 {
+					fmt.Println("Numero errado! coloque outro!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				if mostrador == 0 {
+					fmt.Println("Receita feita!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Printf("Gasto registrado!\n")
+				time.Sleep(2 * time.Second)
+				continue
+
+			case 4:
+				if MeuCaderno.MeusGastos[indice].Transacao == "" {
+					fmt.Println("Tipo de transacao nao definido! coloque ela primeiro!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Printf("Definindo a data && valor\n")
+				err4 := MeuCaderno.ColocarDataGastos(indice, MinhasFin.Ano)
+
+				if err4 != nil {
+					fmt.Println(err4)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				if MeuCaderno.MeusGastos[indice].Transacao == spt.TipoTransacao(spt.Ganho) {
+					fmt.Printf("Digite o valor para a receita - ")
+					ColocarValor, err5 := strconv.ParseFloat(LerLinha(), 64)
+
+					if err5 != nil {
+						fmt.Println(err5)
+						time.Sleep(2 * time.Second)
+						continue
+					}
+
+					err5 = MeuCaderno.ColocarValorGastos(indice, ColocarValor)
+
+					if err5 != nil {
+						fmt.Println(err5)
+						time.Sleep(2 * time.Second)
+						continue
+					}
+				}
+
+				fmt.Printf("Digite o valor para gastos - ")
+				ColocarValor, err5 := strconv.ParseFloat(LerLinha(), 64)
+
+				if err5 != nil {
+					fmt.Println(err5)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				err5 = MeuCaderno.ColocarValorGastos(indice, ColocarValor)
+
+				if err5 != nil {
+					fmt.Println(err5)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Println("Registro feito com sucesso!")
 				time.Sleep(2 * time.Second)
 				continue
 				
 			default:
 				fmt.Printf("Entrada invalida! digite novamente!")
 				time.Sleep(2 * time.Second)
-				continue				
+				continue
 		}
 
 		Formatacao()

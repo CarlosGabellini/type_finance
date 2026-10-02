@@ -1,10 +1,12 @@
 package spt
 
 import (
+	"bufio"
 	"encoding/json"
 	"math"
 	"os"
 	"strconv"
+	"strings"
 )
 
 //Arquivo save.go responsavel por salvar o arquivo. (funcao essencial)
@@ -16,7 +18,9 @@ import (
 	eu nao presciso usar a struct original, por que isso vira o ponteiro do ponteiro na hora de salvar,
 	tudo o que eu prescisava era criar uma copia para salvar ela no meu disco.
 //-------------------------------------------------------------------------------------------------------/
- */
+*/
+
+var NovaEntrada = bufio.NewReader(os.Stdin)
 
 //Salva o ano retornando o caminho do arquivo e um erro caso nao tenha conseguido fazer;
 func (MeuArquivo Arquivos) SalvarAno() (string, error) {
@@ -59,4 +63,24 @@ func CalcularPorcentagem(valor float64, total float64) float64 {
 //Retorna um arrendodamento de 2 digitos para float64, exemplo: 3.1517 -> 3.15;
 func Arredondamento2Digitos(valor float64) float64 {
 	return (math.Round(valor * 100)) / 100
+}
+
+func CalcularIDMaior(arq2 *Arquivos) int {
+
+	var MeuID int = 0
+	
+	for _, Cadernos := range arq2.MeuCaderno {
+		for _, gastos := range Cadernos.MeusGastos {
+			if MeuID < gastos.ID {
+				MeuID = gastos.ID
+			}
+		}
+	}
+	
+	return MeuID
+}
+
+func LerNovaLinha() string {
+	linha1, _ := NovaEntrada.ReadString('\n')
+	return strings.TrimSpace(linha1)
 }

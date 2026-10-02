@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -155,7 +156,7 @@ func ColocarAno(setAno int, MinhasFinancas *Arquivos) int {
 	return 1
 }
 
-func (MinhasFinancas *MeuCaderno) ColocarData(setInicio, setFim time.Time) error {
+func (MinhasFinancas *MeuCaderno) ColocarData1(setInicio, setFim time.Time) error {
 
 	if setInicio.IsZero() || setFim.IsZero() {
 		PersonError := fmt.Errorf("Data invalida!")
@@ -188,7 +189,7 @@ func (a *Arquivos) NovoCaderno(inicio, fim time.Time) (int, error) {
 
 	NOVO_CADERNO := MeuCaderno{}
 
-	if err := NOVO_CADERNO.ColocarData(inicio, fim); err != nil {
+	if err := NOVO_CADERNO.ColocarData1(inicio, fim); err != nil {
 		return -1, err
 	}
 
@@ -237,9 +238,71 @@ func (MinhasFin *Arquivos) DefinirValorRef(setValor float64, indice int) {
 	time.Sleep(2 * time.Second)
 }
 
-func (MeuCaderno *MeuCaderno) DefinirUmaNovaTransacao() (int) {
-	Nova := MinhasTransacoes{}
+func (MeuCaderno *MeuCaderno) DefinirUmaNovaTransacao(arq1 *Arquivos) (int) {
+	var MeuID int
+	MeuID = CalcularIDMaior(arq1)
+	Nova := MinhasTransacoes{ID: MeuID + 1}
+	
 	MeuCaderno.MeusGastos = append(MeuCaderno.MeusGastos, Nova)
 
 	return len(MeuCaderno.MeusGastos) - 1
+}
+
+func (MeuCaderno *MeuCaderno) DefinirReceitaGasto(indice int, gastoOuReceita int) int{
+	if gastoOuReceita == 0 {
+		MeuCaderno.MeusGastos[indice].Transacao = TipoTransacao(Ganho)
+		return 0
+	}
+
+	if gastoOuReceita == 1 {
+		MeuCaderno.MeusGastos[indice].Transacao = TipoTransacao(Gasto)
+		return 1
+	}
+
+	return -1
+}
+
+func (MeuCaderno *MeuCaderno) ColocarDataGastos(indice int, ano int) error {
+	
+	if indice < 0 || indice >= len(MeuCaderno.MeusGastos) {
+		return fmt.Errorf("indice invalido: %d", indice)
+	}
+
+	for {
+		fmt.Printf("Digite a data (dia/mes, ex: 05/03) - ")
+		entrada := strings.TrimSpace(LerNovaLinha())
+
+		data, err := time.Parse("02/01/2006", fmt.Sprintf("%s/%d", entrada, ano))
+		
+		if err != nil {
+			fmt.Println("Data invalida! Use o formato dia/mes (ex: 05/03).")
+			continue
+		}
+
+		if data.Before(MeuCaderno.DataInicio) || data.After(MeuCaderno.DataFim) {
+			fmt.Printf("Data fora do periodo do caderno(%s a %s)!\n", 
+				MeuCaderno.DataInicio.Format("02/01"),
+				MeuCaderno.DataFim.Format("02/01"))
+
+			continue
+		}
+
+		MeuCaderno.MeusGastos[indice].Data = data
+		return nil
+	}
+}
+
+func (MeuCaderno *MeuCaderno) ColocarValorGastos(indice int, setValor float64) error {
+	
+	if indice < 0 || indice >= len(MeuCaderno.MeusGastos) {
+		return fmt.Errorf("indice invalido: %d\n", indice)
+	}
+
+	if setValor < 0 {
+		return fmt.Errorf("Valor invalido, deve ser positivo.\n")
+	}
+
+	MeuCaderno.MeusGastos[indice].Valor = setValor
+
+	return nil
 }

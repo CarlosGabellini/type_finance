@@ -145,7 +145,7 @@ func AbrirAnos(MinhasFinancas *spt.Arquivos) {
 
 			case 2:
 				AbrirAlgumAno(MinhasFinancas)
-				time.Sleep(3 * time.Second)
+				time.Sleep(2 * time.Second)
 
 			case 3:
 				CAMINHO_ARQ, err2 := MinhasFinancas.SalvarAno()
