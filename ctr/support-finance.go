@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"text/tabwriter"
 	"time"
 	"type_finance/spt"
@@ -183,9 +184,7 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 }
 
 func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
-
-	Formatacao()
-
+	
 	//Criando um nova struct que aponta diretamente para a original, deixa o codigo menos verboso;
 	MeuCaderno := &MinhasFin.MeuCaderno[mes]
 
@@ -193,6 +192,7 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 	var indice int = -1
 	
 	for {
+		Formatacao()
 		fmt.Printf("\n")
 		
 		fmt.Printf("------------ Bem vindo ao cadastro de receitas/despesas -----------------\n\n")
@@ -202,9 +202,9 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 02 - alterar uma receita/despesa existente\n")
 		fmt.Printf("\t 03 - Colocar gasto ou despesa\n")
 		fmt.Printf("\t 04 - Definir valor && data\n")
-		fmt.Printf("\t 06 - Colocar descricao\n")
-		fmt.Printf("\t 07 - Ver as receitas que tenho\n")
-		fmt.Printf("\t 08 - Salvar\n")
+		fmt.Printf("\t 05 - Colocar descricao\n")
+		fmt.Printf("\t 06 - Ver as receitas que tenho\n")
+		fmt.Printf("\t 07 - Salvar\n")
 		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
 
 		PersonalizarTerminal()
@@ -265,6 +265,12 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 4:
+				if indice == -1 {
+					fmt.Printf("Indice invalido! Cadastre uma transacao!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
 				if MeuCaderno.MeusGastos[indice].Transacao == "" {
 					fmt.Println("Tipo de transacao nao definido! coloque ela primeiro!")
 					time.Sleep(2 * time.Second)
@@ -297,6 +303,10 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 						time.Sleep(2 * time.Second)
 						continue
 					}
+
+					fmt.Printf("Cadastro da receita concluido!\n")
+					time.Sleep(2 * time.Second)
+					continue
 				}
 
 				fmt.Printf("Digite o valor para gastos - ")
@@ -316,8 +326,45 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 					continue
 				}
 
+				err6 := MeuCaderno.AtualizarPorcentagemRef(indice, ColocarValor)
+
+				if err6 != nil {
+					fmt.Println(err6)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
 				fmt.Println("Registro feito com sucesso!")
 				time.Sleep(2 * time.Second)
+				continue
+
+			case 5:
+				fmt.Printf("Digite uma descricao - ")
+
+				if indice == -1 {
+					fmt.Printf("Indice invalido! Cadastre uma transacao!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				if MeuCaderno.MeusGastos[indice].Transacao == "" {
+					fmt.Println("Tipo de transacao nao definido! coloque ela primeiro!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				colocarDescricao := strings.TrimSpace(LerLinha())
+
+				err7 := MeuCaderno.ColocarDescricao(indice, colocarDescricao)
+
+				if err7 != nil {
+					fmt.Println(err7)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Println("A descricao foi devidamente colocada!")
+				time.Sleep(1 * time.Second)
 				continue
 				
 			default:
@@ -325,8 +372,6 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				time.Sleep(2 * time.Second)
 				continue
 		}
-
-		Formatacao()
 	}
 }
 

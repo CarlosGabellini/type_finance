@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 //spt significa suporte!
@@ -303,6 +304,42 @@ func (MeuCaderno *MeuCaderno) ColocarValorGastos(indice int, setValor float64) e
 	}
 
 	MeuCaderno.MeusGastos[indice].Valor = setValor
+
+	return nil
+}
+
+func (MeuCaderno *MeuCaderno) ColocarDescricao(indice int, descricao string) error {
+
+	var maximaDescricao int = 20
+	
+	if indice < 0 || indice >= len(MeuCaderno.MeusGastos) {
+		return fmt.Errorf("indice invalido!\n")
+	}
+
+	if descricao == "" {
+		return fmt.Errorf("A descricao nao pode ser vazia!")
+	}
+
+	if n := utf8.RuneCountInString(descricao); n > maximaDescricao {
+		return fmt.Errorf("Descricao muito longa, tem %d caracteres, maximo: %d\n", n, maximaDescricao)
+	}
+
+	MeuCaderno.MeusGastos[indice].Descricao = descricao
+	return nil
+}
+
+func (MeuCard *MeuCaderno) AtualizarPorcentagemRef(indice int, setvalor float64) error {
+
+	if indice < 0 || indice >= len(MeuCard.MeusGastos) {
+		return fmt.Errorf("Indice invalido!")
+	}
+
+	if MeuCard.MeusGastos[indice].Transacao != Gasto {
+		return fmt.Errorf("Isso nao eh um gasto para calcular!")
+	}
+
+	Total := MeuCard.ValorRef
+	MeuCard.MeusGastos[indice].Porcentagem = CalcularPorcentagem(setvalor, Total)
 
 	return nil
 }
