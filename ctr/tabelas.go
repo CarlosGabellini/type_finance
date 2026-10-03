@@ -17,7 +17,7 @@ func TabelaReceitasDespesas(MeuCaderno spt.MeuCaderno) {
 	var formatGasto string
 	var formatPorcentagem string
 
-	fmt.Printf("\nBem vindo a tabela de gastos!\n")
+	fmt.Printf("\nBem vindo a tabela de gastos && receitas!\n")
 	fmt.Printf("Saldo inicial - %.2f\n", MeuCaderno.SaldoInicial)
 	fmt.Printf("Saldo final (Ate o momento) - %.2f\n", MeuCaderno.CalcularSaldoFinal())
 	

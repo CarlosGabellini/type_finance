@@ -160,32 +160,71 @@ func (a *Arquivos) NovoCaderno(inicio, fim time.Time) (int, error) {
 }
 
 //Define o saldo inicial do nosso arquivo em que estamos trabalhando.
-func (MinhasFin *Arquivos) DefinirSaldoInicial(setSaldo float64, MesIndice int) {
+func (MinhasFin *Arquivos) DefinirSaldoInicial(setSaldo float64, MesIndice int) error {
 
 	if MinhasFin.MeuCaderno[MesIndice].SaldoInicial != 0 {
-		fmt.Printf("Saldo ja cadastrado! deseja realmente alterar?")
-		time.Sleep(1 * time.Second)
-		return
+		fmt.Printf("Saldo ja cadastrado! deseja realmente alterar?\n")
+		fmt.Printf("1 - Sim\t || 0- nao\n")
+		
+		set_input, err := strconv.Atoi(LerNovaLinha())
+
+		if err != nil {
+			fmt.Println(err)
+			time.Sleep(1 * time.Second)
+			return err
+		}
+
+		if set_input == 1 {
+			fmt.Printf("Prosseguindo...\n")
+			time.Sleep(1 * time.Second)
+		}
+
+		if set_input == 0 {
+			fmt.Printf("Saldo nao sera cadastrado!\n")
+			time.Sleep(2 * time.Second)
+			return nil
+		}
 	}
 	
 	MinhasFin.MeuCaderno[MesIndice].SaldoInicial = setSaldo
+
+	//Variavel criada somente para nao ficar verboso na saida;
 	NovoSaldo := MinhasFin.MeuCaderno[MesIndice].SaldoInicial
 	
 	fmt.Printf("Saldo guardado com sucesso! Valor: %.2f\n", NovoSaldo)
-
 	time.Sleep(1 * time.Second)
+
+	return nil
 }
 
 func (MinhasFin *Arquivos) DefinirSaldoFinal(setSaldo float64, indice int) {
 	MinhasFin.MeuCaderno[indice].SaldoFinal = Arredondamento2Digitos(setSaldo)
 }
 
-func (MinhasFin *Arquivos) DefinirValorRef(setValor float64, indice int) {
+func (MinhasFin *Arquivos) DefinirValorRef(setValor float64, indice int) error {
 
 	if MinhasFin.MeuCaderno[indice].ValorRef != 0 {
-		fmt.Printf("Deseja alterar o valor de referencia? ja tem um cadastrado.")
-		time.Sleep(2 * time.Second)
-		return
+		fmt.Printf("Deseja alterar o valor de referencia? ja tem um cadastrado.\n")
+		fmt.Printf("1 - Sim\t || 0- nao\n")
+		
+		set_input, err := strconv.Atoi(LerNovaLinha())
+
+		if err != nil {
+			fmt.Println(err)
+			time.Sleep(1 * time.Second)
+			return err
+		}
+
+		if set_input == 1 {
+			fmt.Printf("Prosseguindo...\n")
+			time.Sleep(1 * time.Second)
+		}
+
+		if set_input == 0 {
+			fmt.Printf("ValorRef nao sera cadastrado!\n")
+			time.Sleep(2 * time.Second)
+			return nil
+		}
 	}
 
 	MinhasFin.MeuCaderno[indice].ValorRef = setValor
@@ -193,6 +232,8 @@ func (MinhasFin *Arquivos) DefinirValorRef(setValor float64, indice int) {
 
 	fmt.Printf("Valor de referencia salvo - %.2f\n", MeuValor)
 	time.Sleep(2 * time.Second)
+
+	return nil
 }
 
 func (MeuCaderno *MeuCaderno) DefinirUmaNovaTransacao(arq1 *Arquivos) (int) {

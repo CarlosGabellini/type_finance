@@ -97,6 +97,10 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 	//Essa funcao tem como objetivo abrir o mes e ter algumas funcionalidades, desde mostrar a tabela,
 	// cadastrar receitas e despesas, e muito mais!
 
+
+	//SOMENTE USE ESTA OPCAO PARA O CASE 5, eh para imprimir somente a tabela;
+	PlanilhaMes := &MinhasFin.MeuCaderno[Mes]
+	
 	for {
 		Formatacao()
 		
@@ -142,7 +146,15 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 					continue
 				}
 				
-				MinhasFin.DefinirSaldoInicial(saldoInicial, Mes)
+				error1 := MinhasFin.DefinirSaldoInicial(saldoInicial, Mes)
+
+				if error1 != nil {
+					fmt.Println(error1)
+					time.Sleep(1 * time.Second)
+					continue
+				}
+
+				continue
 
 			case 2:
 				fmt.Printf("Digite o valor do saldo de referencia - ")
@@ -154,11 +166,28 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 					continue
 				}
 
-				MinhasFin.DefinirValorRef(ref, Mes)
+				//Ja tem um time sleep e uma mensagem pronta a partir desta funcao;
+				error2 := MinhasFin.DefinirValorRef(ref, Mes)
+
+				if error2 != nil {
+					fmt.Println(error2)
+					time.Sleep(1 * time.Second)
+					continue
+				}
+
 				continue
 
 			case 3:
 				CadastrarReceitaDespesa(MinhasFin, Mes)
+				continue
+
+			case 5:
+				fmt.Printf("Entrando no menu das receitas....")
+				time.Sleep(1 * time.Second)
+				TabelaReceitasDespesas(*PlanilhaMes)
+
+				fmt.Printf("tabela mostrada!")
+				time.Sleep(1 * time.Second)
 				continue
 
 			case 9:
@@ -215,8 +244,11 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 07 - Ver saldo atual\n")
 		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
 
-		PersonalizarTerminal()
+		//Na opcao 6 eu poderia excluir ela e somente deixar no switch de cima, mas prefiri deixar em ambos
+		//os casos para os usuarios nao ficarem prescisando navegar toda hora, tem que ser algo pratico e 
+		// intuitivo;
 
+		PersonalizarTerminal()
 
 		if indiceValido() {
 			fmt.Printf("\nAtualmente mechendo no ID - %d\n", MeuCaderno.MeusGastos[indice].ID)
