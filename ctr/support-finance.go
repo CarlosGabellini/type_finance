@@ -93,13 +93,13 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 		fmt.Printf("Este mes ainda nao foi criado || mes invalido!!")
 		return
 	}
-	
-	Formatacao()
 
 	//Essa funcao tem como objetivo abrir o mes e ter algumas funcionalidades, desde mostrar a tabela,
 	// cadastrar receitas e despesas, e muito mais!
 
 	for {
+		Formatacao()
+		
 		fmt.Printf("\n")
 		fmt.Printf("--------------------- Funcionalidades do Mes e cadastro -------------------------\n")
 
@@ -178,8 +178,6 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				fmt.Printf("Entrada invalida!")
 				continue
 		}
-
-		Formatacao()
 	}
 }
 
@@ -189,7 +187,17 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 	MeuCaderno := &MinhasFin.MeuCaderno[mes]
 
 	//O indice deve ser colocado aqui fora para ele nao sofrer reatribuicao de valor toda hora!
-	var indice int = 0
+	var indice int = -1
+
+	if len(MeuCaderno.MeusGastos) > 0 {
+		indice = 0
+	}
+
+	//Funcao anonima usada para nao ter indice invalido! e para nao fechar o programa inesperadamente;
+	//NAO MECHER!
+	indiceValido := func() bool {
+		return indice >= 0 && indice < len(MeuCaderno.MeusGastos)
+	}
 	
 	for {
 		Formatacao()
@@ -209,7 +217,14 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 
 		PersonalizarTerminal()
 
-		fmt.Printf("\nAtualmente mechendo no ID - %d\n", MeuCaderno.MeusGastos[indice].ID)
+
+		if indiceValido() {
+			fmt.Printf("\nAtualmente mechendo no ID - %d\n", MeuCaderno.MeusGastos[indice].ID)
+
+		} else {
+			fmt.Printf("\nNenhuma transacao selecionada! use a opcao 1 para criar uma transacao.\n")
+		}
+		
 		fmt.Printf("Digite sua opcao - ")
 		controle, err := strconv.Atoi(LerLinha())
 
@@ -258,6 +273,12 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 3:
+
+				if !indiceValido() {
+					fmt.Println("Nenhuma transacao selecionada! Crie ou busque uma primeiro.")
+					time.Sleep(2 * time.Second)
+					continue
+				}
 
 				if MeuCaderno.MeusGastos[indice].Transacao != "" {
 					fmt.Printf("Gasto || Receita ja cadastrados! deseja realmente alterar?\n")
@@ -319,8 +340,8 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 4:
-				if indice == -1 {
-					fmt.Printf("Indice invalido! Cadastre uma transacao!")
+				if !indiceValido() {
+					fmt.Println("Nenhuma transacao selecionada! Crie ou busque uma primeiro.")
 					time.Sleep(2 * time.Second)
 					continue
 				}
@@ -331,7 +352,40 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 					continue
 				}
 
-				fmt.Printf("Definindo a data && valor\n")
+				if MeuCaderno.MeusGastos[indice].Transacao != "" {
+					fmt.Printf("Gasto || Receita ja cadastrados! deseja realmente alterar?\n")
+					fmt.Printf("1 - Para sim ------ 0 - Para nao\n")
+					fmt.Printf("Digite sua opcao - ")
+
+					//Meu programa esta fechando inesperadamente, pode ser o nome da variavel que eh igual;
+					descisao2, err := strconv.Atoi(LerLinha())
+
+					if err != nil {
+						fmt.Println(err)
+						time.Sleep(1 * time.Second)
+						continue
+					}
+
+					if descisao2 == 1 {
+						fmt.Printf("Pode continuar!\n")
+					}
+
+					if descisao2 == 0 {
+						fmt.Printf("Nao alterado!\n")
+						time.Sleep(1 * time.Second)
+						continue
+					}
+
+					if descisao2 != 1 && descisao2 != 0 {
+						fmt.Printf("Voce nao digitou nem 0 e nem 1!")
+						time.Sleep(1 * time.Second)
+						continue
+					}
+				}
+
+				Formatacao()
+
+				fmt.Printf("\nDefinindo a data && valor\n")
 				err4 := MeuCaderno.ColocarDataGastos(indice, MinhasFin.Ano)
 
 				if err4 != nil {
@@ -393,6 +447,14 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 5:
+
+				//Fazendo protecao de indices para nao acessar algo invalido!
+				if !indiceValido() {
+					fmt.Println("Nenhuma transacao selecionada! Crie ou busque uma primeiro.")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+				
 				fmt.Printf("Digite uma descricao - ")
 
 				if indice == -1 {
