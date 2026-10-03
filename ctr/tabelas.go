@@ -30,6 +30,12 @@ func TabelaReceitasDespesas(MeuCaderno spt.MeuCaderno) {
 	copy(transacoes, MeuCaderno.MeusGastos)
 
 	sort.Slice(transacoes, func(i, j int) bool {
+
+		//Desempate pelo ID, caso tenha duas transacoes;
+		if transacoes[i].Data.Equal(transacoes[j].Data) {
+				return transacoes[i].ID < transacoes[j].ID
+		}
+		
 		return transacoes[i].Data.Before(transacoes[j].Data)
 	})
 	

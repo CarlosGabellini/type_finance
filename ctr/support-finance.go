@@ -189,7 +189,7 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 	MeuCaderno := &MinhasFin.MeuCaderno[mes]
 
 	//O indice deve ser colocado aqui fora para ele nao sofrer reatribuicao de valor toda hora!
-	var indice int = -1
+	var indice int = 0
 	
 	for {
 		Formatacao()
@@ -205,12 +205,12 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 05 - Colocar descricao\n")
 		fmt.Printf("\t 06 - Ver as receitas que tenho\n")
 		fmt.Printf("\t 07 - Ver saldo atual\n")
-		fmt.Printf("\t 08 - Salvar\n")
 		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
 
 		PersonalizarTerminal()
 
-		fmt.Printf("\nDigite sua opcao - ")
+		fmt.Printf("\nAtualmente mechendo no ID - %d\n", MeuCaderno.MeusGastos[indice].ID)
+		fmt.Printf("Digite sua opcao - ")
 		controle, err := strconv.Atoi(LerLinha())
 
 		if err != nil {
@@ -235,9 +235,62 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				time.Sleep(2 * time.Second)
 				continue
 
+			case 2:
+				fmt.Printf("Digite o ID que gostaria de buscar - ")
+				busca, err := strconv.Atoi(LerLinha())
+
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				indice = MeuCaderno.BuscarID(busca)
+
+				if indice == -1 {
+					fmt.Printf("ID nao encontrado!\n")
+					indice = 0
+					time.Sleep(1 * time.Second)
+					continue
+				}
+
+				fmt.Printf("ID encontrado - Voce pode alterar ele agora.")
+				continue
 
 			case 3:
-				fmt.Printf("Colocando o gasto/receita\n")
+
+				if MeuCaderno.MeusGastos[indice].Transacao != "" {
+					fmt.Printf("Gasto || Receita ja cadastrados! deseja realmente alterar?\n")
+					fmt.Printf("1 - Para sim ------ 0 - Para nao\n")
+					fmt.Printf("Digite sua opcao - ")
+
+					descisao, err := strconv.Atoi(LerLinha())
+
+					if err != nil {
+						fmt.Println(err)
+						time.Sleep(1 * time.Second)
+						continue
+					}
+
+					if descisao == 1 {
+						fmt.Printf("Pode continuar!\n")
+					}
+
+					if descisao == 0 {
+						fmt.Printf("Nao alterado!\n")
+						time.Sleep(1 * time.Second)
+						continue
+					}
+
+					if descisao != 1 && descisao != 0 {
+						fmt.Printf("Voce nao digitou nem 0 e nem 1!")
+						time.Sleep(1 * time.Second)
+						continue
+					}
+				}
+
+				Formatacao()
+				fmt.Printf("\nColocando o gasto/receita\n")
 				fmt.Printf("gasto - 1\tReceita - 0\n")
 				controle2, err3 := strconv.Atoi(LerLinha())
 

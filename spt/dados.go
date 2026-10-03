@@ -365,3 +365,26 @@ func (MeuCard *MeuCaderno) CalcularSaldoFinal() float64 {
 
 	return Arredondamento2Digitos(MeuSaldoAtual)
 }
+
+func (MeuCard MeuCaderno) BuscarID(id int) int {
+
+	var NovoID int = -1
+	var chave bool = false
+	
+	if id < 0 {
+		return -1
+	}
+
+	for indice, MeusGastos := range MeuCard.MeusGastos {
+		if MeusGastos.ID == id {
+			NovoID = indice
+			chave = true
+		}
+	}
+
+	if !chave {
+		NovoID = -1
+	}
+
+	return NovoID
+}
