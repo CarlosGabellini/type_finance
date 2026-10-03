@@ -404,7 +404,8 @@ func CalcularPormenor(MinhasFin *Arquivos, MeuCaderno *MeuCaderno) error {
 	}
 
 	diferenca := saldoBanco - MeuCaderno.CalcularSaldoFinal()
-
+	diferenca = Arredondamento2Digitos(diferenca)
+	
 	if math.Abs(diferenca) < 0.005 {
 		return fmt.Errorf("Saldo do banco e do programa ja batem!")
 	}

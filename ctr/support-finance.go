@@ -533,7 +533,15 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 8:
+				myerror := spt.CalcularPormenor(MinhasFin, MeuCaderno)
+
+				if myerror != nil {
+					fmt.Println(myerror)
+					time.Sleep(2 * time.Second)
+					continue
+				}
 				
+				continue
 				
 			default:
 				fmt.Printf("Entrada invalida! digite novamente!")
