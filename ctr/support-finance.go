@@ -137,7 +137,7 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				saldoInicial, err1 := strconv.ParseFloat(LerLinha(), 64)
 
 				if err1 != nil {
-					fmt.Println(err)
+					fmt.Println(err1)
 					time.Sleep(2 * time.Second)
 					continue
 				}
@@ -260,14 +260,16 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 					continue
 				}
 
-				indice = MeuCaderno.BuscarID(busca)
+				//Reatribuindo em outra variavel para nao ter o crash novamente;
+				achado := MeuCaderno.BuscarID(busca)
 
 				if indice == -1 {
 					fmt.Printf("ID nao encontrado!\n")
-					indice = 0
 					time.Sleep(1 * time.Second)
 					continue
 				}
+
+				indice = achado
 
 				fmt.Printf("ID encontrado - Voce pode alterar ele agora.")
 				continue
@@ -447,7 +449,6 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 5:
-
 				//Fazendo protecao de indices para nao acessar algo invalido!
 				if !indiceValido() {
 					fmt.Println("Nenhuma transacao selecionada! Crie ou busque uma primeiro.")
