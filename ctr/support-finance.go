@@ -368,6 +368,15 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				time.Sleep(1 * time.Second)
 				continue
 
+			case 6:
+				fmt.Printf("Entrando no menu das receitas....")
+				time.Sleep(1 * time.Second)
+				TabelaReceitasDespesas(*MeuCaderno)
+
+				fmt.Printf("tabela mostrada!")
+				time.Sleep(1 * time.Second)
+				continue
+
 			case 7:
 				fmt.Printf("Saldo atual encontra-se abaixo: ")
 				fmt.Printf("%.2f\n", MeuCaderno.CalcularSaldoFinal())
