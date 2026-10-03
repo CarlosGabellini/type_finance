@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -384,4 +385,87 @@ func (MeuCard MeuCaderno) BuscarID(id int) int {
 	}
 
 	return NovoID
+}
+
+func CalcularPormenor(MinhasFin *Arquivos, MeuCaderno *MeuCaderno) error {
+	fmt.Printf("Digite o saldo atual da conta do banco - ")
+	saldoBanco, error1 := strconv.ParseFloat(LerNovaLinha(), 64)
+
+	if error1 != nil {
+		fmt.Println(error1)
+		time.Sleep(2 * time.Second)
+		return error1
+	}
+
+	for _, transations := range MeuCaderno.MeusGastos {
+		if strings.EqualFold(transations.Descricao, "pormenor") {
+			return fmt.Errorf("Este mes ja tem um pormenor! (ID: %d)!", transations.ID)
+		}
+	}
+
+	diferenca := saldoBanco - MeuCaderno.CalcularSaldoFinal()
+
+	if math.Abs(diferenca) < 0.005 {
+		return fmt.Errorf("Saldo do banco e do programa ja batem!")
+	}
+
+	//Levando em consideracao caso o banco TENHA MAIS DINHEIRO! sobrou dinheiro nao registrado;
+	tipo := Ganho
+
+	//BANCO TEM MENOS DINHEIRO, gasto nao registrado;
+	if diferenca < 0 {
+		tipo = Gasto
+	}
+
+	valor := math.Abs(diferenca)
+
+	//Validando a data;
+	fmt.Printf("Dia do pormenor (1 a %d) - ", MeuCaderno.DataFim.Day())
+
+	dia, err := strconv.Atoi(LerNovaLinha())
+	
+	if err != nil {
+		fmt.Println(err)
+		time.Sleep(2 * time.Second)
+		return err
+	}
+	
+	data := time.Date(MeuCaderno.DataInicio.Year(), MeuCaderno.DataInicio.Month(), 
+		dia, 0, 0, 0, 0, time.Local)
+	
+	// Se o dia nao existe (ex: 31 em mes de 30), o Go "rola" para o mes seguinte;
+	// por isso comparo o mes e tambem os limites do caderno
+	if data.Month() != MeuCaderno.DataInicio.Month() || data.Before(MeuCaderno.DataInicio) || 
+	data.After(MeuCaderno.DataFim) {
+		time.Sleep(2 * time.Second)
+		return fmt.Errorf("Data invalida para este mes!")
+	}
+
+	//Fazendo a confirmacao antes de enviar;
+	fmt.Printf("\nPormenor: %s de R$ %.2f em %s\n", tipo, valor, data.Format("02/01/2006"))
+	fmt.Printf("Confirmar? 1 - SIM || 0 - NAO - ")
+
+	ok, err := strconv.Atoi(LerNovaLinha())
+	
+	if err != nil || ok != 1 {
+		return fmt.Errorf("Pormenor nao cadastrado.") 
+	}
+
+	//Aqui cria uma nova transacao!
+	indice := MeuCaderno.DefinirUmaNovaTransacao(MinhasFin)
+
+	t := &MeuCaderno.MeusGastos[indice]
+	t.Transacao = tipo
+	t.Data = data
+	t.Valor = valor
+	t.Descricao = "pormenor"
+
+	if tipo == Gasto {
+		MeuCaderno.AtualizarPorcentagemRef(indice, valor)
+	}
+
+	fmt.Println("Pormenor cadastrado!")
+	time.Sleep(2 * time.Second)
+	
+	return nil
 }

@@ -113,10 +113,9 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 		fmt.Printf("\t03 - Cadastrar Receita/Despesa\n")
 		fmt.Printf("\t04 - Excluir Receita/Despesa\n")
 		fmt.Printf("\t05 - Imprimir tabela de receita e despesa do mes\n")
-		fmt.Printf("\t06 - Calcular o pormenor\n")		//Descricao de itens que nao queremos registrar.
-		fmt.Printf("\t07 - Definir o saldo final\n")
-		fmt.Printf("\t08 - Fazer o fechamento do mes\n")
-		fmt.Printf("\t09 - Fazer o salvamento || checkpoint\n")
+		fmt.Printf("\t06 - Definir o saldo final\n")
+		fmt.Printf("\t07 - Fazer o fechamento do mes\n")
+		fmt.Printf("\t08 - Fazer o salvamento || checkpoint\n")
 
 		PersonalizarTerminal()
 		fmt.Printf("\n")
@@ -242,6 +241,7 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 05 - Colocar descricao\n")
 		fmt.Printf("\t 06 - Ver as receitas que tenho\n")
 		fmt.Printf("\t 07 - Ver saldo atual\n")
+		fmt.Printf("\t 08 - Calcular o pormenor\n")
 		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
 
 		//Na opcao 6 eu poderia excluir ela e somente deixar no switch de cima, mas prefiri deixar em ambos
@@ -531,6 +531,9 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 
 				time.Sleep(3 * time.Second)
 				continue
+
+			case 8:
+				
 				
 			default:
 				fmt.Printf("Entrada invalida! digite novamente!")
