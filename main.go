@@ -13,6 +13,10 @@ comecando a fazer o basico sobre a impressao de determinadas mensagens para que 
 -pile corretamente.
 
 	MeuArquivo = Variavel global onde mecheremos nela para ver sobre nossos arquivos;
+
+	Todo o controle e varios outros menus vao sair da main e entrarao no pacote ctr, que significa
+controle em abreviacao, as funcoes se unem umas as outras para calcular as nossas financas de modo
+eficiente e automatico;
 ---------------------------------------------------------------------------------------------------------/
 */
 

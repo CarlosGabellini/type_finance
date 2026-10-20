@@ -111,11 +111,10 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 		fmt.Printf("\t01 - Definir saldo inicial.\n")
 		fmt.Printf("\t02 - Definir valor referencia\n")
 		fmt.Printf("\t03 - Cadastrar Receita/Despesa\n")
-		fmt.Printf("\t04 - Excluir Receita/Despesa\n")
-		fmt.Printf("\t05 - Imprimir tabela de receita e despesa do mes\n")
-		fmt.Printf("\t06 - Definir o saldo final\n")
-		fmt.Printf("\t07 - Fazer o fechamento do mes\n")
-		fmt.Printf("\t08 - Fazer o salvamento || checkpoint\n")
+		fmt.Printf("\t04 - Imprimir tabela de receita e despesa do mes\n")
+		fmt.Printf("\t05 - Definir o saldo final\n")
+		fmt.Printf("\t06 - Fazer o fechamento do mes\n")
+		fmt.Printf("\t07 - Fazer o salvamento || checkpoint\n")
 
 		PersonalizarTerminal()
 		fmt.Printf("\n")
@@ -179,8 +178,8 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 			case 3:
 				CadastrarReceitaDespesa(MinhasFin, Mes)
 				continue
-
-			case 5:
+			
+			case 4:
 				fmt.Printf("Entrando no menu das receitas....")
 				time.Sleep(1 * time.Second)
 				TabelaReceitasDespesas(*PlanilhaMes)
@@ -189,7 +188,7 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				time.Sleep(1 * time.Second)
 				continue
 
-			case 9:
+			case 7:
 				Caminho, err := MinhasFin.SalvarAno()
 
 				if err != nil {
@@ -242,6 +241,7 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		fmt.Printf("\t 06 - Ver as receitas que tenho\n")
 		fmt.Printf("\t 07 - Ver saldo atual\n")
 		fmt.Printf("\t 08 - Calcular o pormenor\n")
+		fmt.Printf("\t 09 - Excluir Receita/Despesa\n")
 		fmt.Printf("\nSinta-se livre para alterar quando quiser o valor caso esteja errado.\n")
 
 		//Na opcao 6 eu poderia excluir ela e somente deixar no switch de cima, mas prefiri deixar em ambos
@@ -307,7 +307,6 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 3:
-
 				if !indiceValido() {
 					fmt.Println("Nenhuma transacao selecionada! Crie ou busque uma primeiro.")
 					time.Sleep(2 * time.Second)
@@ -542,6 +541,9 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				}
 				
 				continue
+
+			case 9:
+				//Fazendo a protecao dos indices aqui tambem!
 				
 			default:
 				fmt.Printf("Entrada invalida! digite novamente!")
