@@ -295,7 +295,7 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				//Reatribuindo em outra variavel para nao ter o crash novamente;
 				achado := MeuCaderno.BuscarID(busca)
 
-				if indice == -1 {
+				if achado == -1 {
 					fmt.Printf("ID nao encontrado!\n")
 					time.Sleep(1 * time.Second)
 					continue
@@ -543,7 +543,54 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 				continue
 
 			case 9:
-				//Fazendo a protecao dos indices aqui tambem!
+				fmt.Printf("Digite o ID que deseja excluir - ")
+				idExcluir, err9 := strconv.Atoi(LerLinha())
+			
+				if err9 != nil {
+					fmt.Println(err9)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				achado9 := MeuCaderno.BuscarID(idExcluir)
+			
+				if achado9 == -1 {
+					fmt.Printf("ID %d nao encontrado!\n", idExcluir)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				//Mostra o que vai ser excluido antes de pedir a confirmacao;
+				alvo := MeuCaderno.MeusGastos[achado9]
+			
+				fmt.Printf("\nVoce vai excluir:\n")
+				fmt.Printf("ID: %d | Data: %s | Tipo: %s | Valor: R$ %.2f | Descricao: %s\n",
+					alvo.ID, alvo.Data.Format("02/01"), alvo.Transacao, alvo.Valor, alvo.Descricao)
+
+				fmt.Printf("Confirmar? 1 - SIM || 0 - NAO - ")
+			
+				confirmar, err10 := strconv.Atoi(LerLinha())
+			
+				if err10 != nil || confirmar != 1 {
+					fmt.Println("Nada foi excluido!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				err9 = MeuCaderno.ExcluirTransacao(idExcluir)
+			
+				if err9 != nil {
+					fmt.Println(err9)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				//Os itens depois do excluido andaram uma casa, entao o indice antigo nao vale mais;
+				indice = -1
+			
+				fmt.Printf("Transacao de ID %d excluida!\n", idExcluir)
+				time.Sleep(2 * time.Second)
+				continue
 				
 			default:
 				fmt.Printf("Entrada invalida! digite novamente!")

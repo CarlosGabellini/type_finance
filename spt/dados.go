@@ -470,3 +470,17 @@ func CalcularPormenor(MinhasFin *Arquivos, MeuCaderno *MeuCaderno) error {
 	
 	return nil
 }
+
+//Funcao feita para excluir uma transacao a partir da procura de um ID;
+func (Caderno *MeuCaderno) ExcluirTransacao(identificador int) error {
+	indice := Caderno.BuscarID(identificador)
+
+	if indice == -1 {
+		return fmt.Errorf("ID %d nao encontrado!", identificador)
+	}
+
+	//Coracao da logica aqui, manipulacao com append e corte de slice;
+	Caderno.MeusGastos = append(Caderno.MeusGastos[:indice], Caderno.MeusGastos[indice+1:]...)
+
+	return nil
+}
