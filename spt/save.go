@@ -53,6 +53,21 @@ func (MeuArquivo Arquivos) SalvarAno() (string, error) {
 	return CAMINHO_ARQUIVO, err
 }
 
+//Salvar anos e contas em um arquivo binario, caso queira economizar no JSON;
+func (MeuArquivo Arquivos) SalvarAnosBin() (string, error) {
+
+	var contas string = "ano-" + strconv.Itoa(MeuArquivo.Ano) + ".bin"
+	CAMINHO_ARQ, err1 := CaminhoArquivoBIN(contas)
+
+	Arq3, err := os.OpenFile(CAMINHO_ARQ, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0644)
+
+	if err != nil {
+		return "", err
+	}
+
+	return "", nil
+}
+
 //Retorna a porcentagem de um valor de referencia;
 func CalcularPorcentagem(valor float64, total float64) float64 {
 	var Calc float64

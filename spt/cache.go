@@ -55,6 +55,8 @@ func CreateDirBin() (string, error) {
 
 	CaminhoSUBPASTa := filepath.Join(MeuCaminhoCache, pastaBin)
 
+	err = os.Mkdir(CaminhoSUBPASTa, 0755)
+
 	if err != nil && !os.IsExist(err) {
 		return "", err
 	}
@@ -65,6 +67,19 @@ func CreateDirBin() (string, error) {
 func CaminhoArquivo(setNome string) (string, error) {
 
 	CaminhoDaPasta, err := CreateDirJSON()
+
+	if err != nil || CaminhoDaPasta == "" {
+		return "", err
+	}
+
+	CAMINHO_ARQ := filepath.Join(CaminhoDaPasta, setNome)
+
+	return CAMINHO_ARQ, nil
+}
+
+//Cria um arquivo binario a partir de um diretorio ja feito;
+func CaminhoArquivoBIN(setNome string) (string, error) {
+	CaminhoDaPasta, err := CreateDirBin()
 
 	if err != nil || CaminhoDaPasta == "" {
 		return "", err
