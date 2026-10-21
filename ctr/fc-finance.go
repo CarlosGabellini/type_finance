@@ -200,9 +200,10 @@ func AbrirAlgumAno(MinhasFin *spt.Arquivos) {
 }
 
 func MenuDoAno(MinhasFin *spt.Arquivos) {
-	Formatacao()
 
 	for {
+		Formatacao()
+		
 		fmt.Printf("\n")
 		fmt.Printf("Bem vindo! O que deseja fazer?\n")
 
@@ -210,6 +211,7 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 		fmt.Printf("01 - Cadastrar novo mes\n")
 		fmt.Printf("02 - Abrir novo mes\n")
 		fmt.Printf("03 - Ver meses cadastrados\n")
+		fmt.Printf("04 - Ver a tabela de um mes fechado.\n")
 
 		for i := 0; i < 50; i++ {
 			fmt.Printf("-")
@@ -250,11 +252,56 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 			case 3:
 				VerMesesCadastrados(MinhasFin)
 
+			case 4:
+				fmt.Printf("Digite o numero do mes fechado que deseja ver: ")
+				Mes, err := strconv.Atoi(LerLinha())
+
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+
+				VerMesFechado(MinhasFin, Mes)
+
+				time.Sleep(1 * time.Second)
+				continue
+
 			default:
 				fmt.Printf("Entrada errada! tente novamente!")
 				continue
 		}
-
-		Formatacao()
 	}
+}
+
+func VerMesFechado(MinhasFin *spt.Arquivos, MesInput int) {
+	Mes := MesInput - 1
+
+	//Validacao de erros abaixo a partir dessa linha;
+	if Mes > 13 || Mes < 0 || Mes >= len(MinhasFin.MeuCaderno) {
+		fmt.Printf("Este mes ainda nao foi criado || mes invalido!")
+		time.Sleep(1 * time.Second)
+		return
+	}
+
+	if MinhasFin.MeuCaderno[Mes].Aberto {
+		fmt.Printf("Mes aberto! impossivel visualizar!")
+		time.Sleep(1 * time.Second)
+		return
+	}
+
+	if MinhasFin.MeuCaderno[Mes].Mes == "" {
+		fmt.Printf("Este mes ainda nao foi criado || mes invalido!!")
+		time.Sleep(1 * time.Second)
+		return
+	}
+
+	PlanilhaMes := &MinhasFin.MeuCaderno[Mes]
+
+	fmt.Printf("Entrando no menu de receitas....")
+	time.Sleep(1 * time.Second)
+
+	TabelaReceitasDespesas(*PlanilhaMes)
+
+	fmt.Printf("Tabela foi mostrada!")
+	time.Sleep(1 * time.Second)
 }
