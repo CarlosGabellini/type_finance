@@ -3,6 +3,7 @@ package spt
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"math"
 	"os"
 	"strconv"
@@ -54,10 +55,13 @@ func (MeuArquivo Arquivos) SalvarAno() (string, error) {
 
 //Retorna a porcentagem de um valor de referencia;
 func CalcularPorcentagem(valor float64, total float64) float64 {
+	var Calc float64
+	
 	NovoValor := Arredondamento2Digitos(valor)
 	NovoTotal := Arredondamento2Digitos(total)
 
-	Calc := Arredondamento2Digitos((NovoValor * 100) / NovoTotal)
+	//Deixando melhor identado;
+	Calc = Arredondamento2Digitos((NovoValor * 100) / NovoTotal)
 
 	return Calc
 }
@@ -87,4 +91,30 @@ func CalcularIDMaior(arq2 *Arquivos) int {
 func LerNovaLinha() string {
 	linha1, _ := NovaEntrada.ReadString('\n')
 	return strings.TrimSpace(linha1)
+}
+
+//Fecha o mes: confere se nao tem transacao incompleta, grava o saldo final e tranca o mes;
+func (MinhasFin *Arquivos) FecharMes(indice int) error {
+
+	if indice < 0 || indice >= len(MinhasFin.MeuCaderno) {
+		return fmt.Errorf("Indice invalido!")
+	}
+
+	Caderno := &MinhasFin.MeuCaderno[indice]
+
+	if !Caderno.Aberto {
+		return fmt.Errorf("Este mes ja esta fechado!")
+	}
+
+	//Nao deixa fechar com transacao pela metade (criada com a opcao 1 e nunca preenchida);
+	for _, t := range Caderno.MeusGastos {
+		if t.Transacao == "" || t.Data.IsZero() || t.Descricao == "" {
+			return fmt.Errorf("A transacao de ID %d esta incompleta! Complete ou exclua antes de fechar.", t.ID)
+		}
+	}
+
+	MinhasFin.DefinirSaldoFinal(Caderno.CalcularSaldoFinal(), indice)
+	Caderno.Aberto = false
+
+	return nil
 }

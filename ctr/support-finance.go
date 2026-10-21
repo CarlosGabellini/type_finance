@@ -112,9 +112,8 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 		fmt.Printf("\t02 - Definir valor referencia\n")
 		fmt.Printf("\t03 - Cadastrar Receita/Despesa\n")
 		fmt.Printf("\t04 - Imprimir tabela de receita e despesa do mes\n")
-		fmt.Printf("\t05 - Definir o saldo final\n")
-		fmt.Printf("\t06 - Fazer o fechamento do mes\n")
-		fmt.Printf("\t07 - Fazer o salvamento || checkpoint\n")
+		fmt.Printf("\t05 - Fazer o fechamento do mes\n")
+		fmt.Printf("\t06 - Fazer o salvamento || checkpoint\n")
 
 		PersonalizarTerminal()
 		fmt.Printf("\n")
@@ -188,7 +187,64 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				time.Sleep(1 * time.Second)
 				continue
 
-			case 7:
+			case 5:
+				fmt.Printf("Antes de fechar, deseja calcular o pormenor? 1 - SIM || 0 - NAO - ")
+				pormenor, err11 := strconv.Atoi(LerLinha())
+			
+				if err11 != nil {
+					fmt.Println(err11)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				if pormenor == 1 {
+					//Se der erro (ex: saldos ja batem), so avisa e segue para o fechamento;
+					err11 = spt.CalcularPormenor(MinhasFin, PlanilhaMes)
+			
+					if err11 != nil {
+						fmt.Println(err11)
+						time.Sleep(2 * time.Second)
+					}
+				}
+			
+				fmt.Printf("\nSaldo final do mes: R$ %.2f\n", PlanilhaMes.CalcularSaldoFinal())
+				fmt.Printf("Depois de fechado NAO sera possivel alterar o mes!\n")
+				fmt.Printf("Fechar o mes? 1 - SIM || 0 - NAO - ")
+			
+				fechar, err12 := strconv.Atoi(LerLinha())
+			
+				if err12 != nil || fechar != 1 {
+					fmt.Println("Mes nao foi fechado!")
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				err12 = MinhasFin.FecharMes(Mes)
+			
+				if err12 != nil {
+					fmt.Println(err12)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+			
+				//Salva logo em seguida para nao perder o fechamento;
+				Caminho, err13 := MinhasFin.SalvarAno()
+			
+				if err13 != nil {
+					fmt.Println(err13)
+					time.Sleep(2 * time.Second)
+					
+				} else {
+					fmt.Printf("Arquivo salvo! Caminho: %s\n", Caminho)
+				}
+			
+				fmt.Printf("Mes fechado com sucesso!\n")
+				time.Sleep(2 * time.Second)
+			
+				//Mes fechado nao pode mais ser mexido, entao sai do menu dele;
+				return
+
+			case 6:
 				Caminho, err := MinhasFin.SalvarAno()
 
 				if err != nil {
@@ -209,7 +265,6 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 }
 
 func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
-	
 	//Criando um nova struct que aponta diretamente para a original, deixa o codigo menos verboso;
 	MeuCaderno := &MinhasFin.MeuCaderno[mes]
 
