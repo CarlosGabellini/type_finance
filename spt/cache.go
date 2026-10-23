@@ -5,6 +5,16 @@ import (
 	"path/filepath"
 )
 
+/*----------------------------------------------- Sobre este Arquivo -------------------------------------/
+	Este arquivo tem como objetivo de responsabilidade guardar e mostrar os caminhos para a persistencia
+de dados do nosso aplicativo de terminal; ele basicamente faz a manipulacao de caminhos e os respectivos
+arquivos.
+	A funcao principal eh CaminhoCache(), que basicamente retorna a pasta cache padrao do usuario em um
+dispositivo Windows, Linux ou MacOS, depois dessa funcao, conseguimos criar a pasta principal do nosso
+aplicativo, onde depois fazemos a manipulacao de outros arquivos vigentes.
+----------------------------------------------------------------------------------------------------------/
+ */
+
 //Cria o caminho do cache e a pasta principal para persistir nossos dados;
 func CaminhoCache() (string, error) {
 

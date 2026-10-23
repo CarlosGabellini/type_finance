@@ -261,11 +261,19 @@ func (MeuCaderno *MeuCaderno) DefinirReceitaGasto(indice int, gastoOuReceita int
 	return -1
 }
 
+func dataCorreta(t time.Time) time.Time {
+	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
+}
+
 func (MeuCaderno *MeuCaderno) ColocarDataGastos(indice int, ano int) error {
 	
 	if indice < 0 || indice >= len(MeuCaderno.MeusGastos) {
 		return fmt.Errorf("indice invalido: %d", indice)
 	}
+
+	//Aqui os horarios e fusos estao zerados, isso serve por que antes nao conseguia cadastrar o dia 1;
+	inicio := dataCorreta(MeuCaderno.DataInicio)
+	fim := dataCorreta(MeuCaderno.DataFim)
 
 	for {
 		fmt.Printf("Digite a data (dia/mes, ex: 05/03) - ")
@@ -278,7 +286,7 @@ func (MeuCaderno *MeuCaderno) ColocarDataGastos(indice int, ano int) error {
 			continue
 		}
 
-		if data.Before(MeuCaderno.DataInicio) || data.After(MeuCaderno.DataFim) {
+		if data.Before(inicio) || data.After(fim) {
 			fmt.Printf("Data fora do periodo do caderno(%s a %s)!\n", 
 				MeuCaderno.DataInicio.Format("02/01"),
 				MeuCaderno.DataFim.Format("02/01"))
