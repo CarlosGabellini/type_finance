@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+//Cria o caminho do cache e a pasta principal para persistir nossos dados;
 func CaminhoCache() (string, error) {
 
 	CaminhoDoCache, err := os.UserCacheDir()
@@ -54,7 +55,6 @@ func CreateDirBin() (string, error) {
 	}
 
 	CaminhoSUBPASTa := filepath.Join(MeuCaminhoCache, pastaBin)
-
 	err = os.Mkdir(CaminhoSUBPASTa, 0755)
 
 	if err != nil && !os.IsExist(err) {
@@ -64,6 +64,7 @@ func CreateDirBin() (string, error) {
 	return CaminhoSUBPASTa, nil
 }
 
+//Cria um caminho de um arquivo JSON e manda em string onde ele fica;
 func CaminhoArquivo(setNome string) (string, error) {
 
 	CaminhoDaPasta, err := CreateDirJSON()

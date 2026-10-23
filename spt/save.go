@@ -61,10 +61,16 @@ func (MeuArquivo Arquivos) SalvarAnosBin() (string, error) {
 
 	Arq3, err := os.OpenFile(CAMINHO_ARQ, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0644)
 
+	if err1 != nil {
+		return "", err1
+	}
+	
 	if err != nil {
 		return "", err
 	}
 
+	defer Arq3.Close()
+	
 	return "", nil
 }
 
@@ -86,6 +92,8 @@ func Arredondamento2Digitos(valor float64) float64 {
 	return (math.Round(valor * 100)) / 100
 }
 
+//Aqui calculamos o ID maior por que a chave primaria deve ser incrementada, os IDs sao unicos a 
+//partir de um determinado ano;
 func CalcularIDMaior(arq2 *Arquivos) int {
 
 	var MeuID int = 0

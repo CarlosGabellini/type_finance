@@ -16,10 +16,9 @@ O **type_finance** é uma aplicação de linha de comando escrita em **Go** para
 
 - [x] Execução 100% no terminal
 - [x] Funciona offline
-- [ ] Registrar gastos e receitas
-- [ ] Categorizar lançamentos
-- [ ] Resumo mensal
-- [ ] Exportar para CSV
+- [x] Registrar gastos e receitas
+- [x] Categorizar lançamentos
+- [x] Resumo mensal
 
 > Ajuste a lista acima conforme o que já está implementado.
 
@@ -83,14 +82,10 @@ Categoria: Alimentação
 ✔ Gasto registrado com sucesso!
 ```
 
-> Exemplo ilustrativo. Troque pela saída real do programa.
-
 ## 🗺️ Roadmap
 
-- [ ] Persistência local dos dados (arquivo)
-- [ ] Filtros por período e categoria
-- [ ] Relatórios mensais
-- [ ] Testes automatizados
+- [x] Persistência local dos dados (arquivo)
+- [x] Relatórios mensais
 
 ## 🤝 Contribuindo
 
@@ -104,7 +99,7 @@ Este é um projeto pessoal, mas sugestões são bem-vindas:
 
 ## 📄 Licença
 
-Defina uma licença para o projeto (ex.: [MIT](https://choosealicense.com/licenses/mit/)).
+Atualmente o projeto nao prescisa de lincença.
 
 ## 👤 Autor
 
