@@ -12,6 +12,13 @@
 
 O **type_finance** é uma aplicação de linha de comando escrita em **Go** para registrar e acompanhar gastos pessoais sem depender de internet, conta em nuvem ou interface gráfica. Seus dados ficam na sua máquina.
 
+## 🌐​🏛️​ Fotos
+
+![foto de inicio] (demonstracao/04-Menu-incial.png)
+![funcionalidade do cadastro] (demonstracao/01-funcionalidades-cadastro.png)
+![Cadastro e receita] (demonstracao/03-Cadastro-receita-e-despesa.png)
+![tabela de gastos] (demonstracao/02-tabela-de-gasto-e-receita.png)
+
 ## ✨ Funcionalidades
 
 - [x] Execução 100% no terminal
@@ -61,25 +68,6 @@ go run main.go
 ```bash
 go build -o type_finance
 ./type_finance
-```
-
-## 🖥️ Exemplo de uso
-
-```text
-$ ./type_finance
-
-=== type_finance ===
-1) Adicionar gasto
-2) Listar gastos
-3) Resumo do mês
-0) Sair
-
-Escolha uma opção: 1
-Descrição: Mercado
-Valor: 152,90
-Categoria: Alimentação
-
-✔ Gasto registrado com sucesso!
 ```
 
 ## 🗺️ Roadmap
