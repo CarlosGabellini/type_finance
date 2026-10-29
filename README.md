@@ -14,10 +14,10 @@ O **type_finance** é uma aplicação de linha de comando escrita em **Go** para
 
 ## 🌐​🏛️​ Fotos
 
-![foto de inicio] (demonstracao/04-Menu-incial.png)
-![funcionalidade do cadastro] (demonstracao/01-funcionalidades-cadastro.png)
-![Cadastro e receita] (demonstracao/03-Cadastro-receita-e-despesa.png)
-![tabela de gastos] (demonstracao/02-tabela-de-gasto-e-receita.png)
+![foto de inicio](demonstracao/04-Menu-incial.png)
+![funcionalidade do cadastro](demonstracao/01-funcionalidades-cadastro.png)
+![Cadastro e receita](demonstracao/03-Cadastro-receita-e-despesa.png)
+![tabela de gastos](demonstracao/02-tabela-de-gasto-e-receita.png)
 
 ## ✨ Funcionalidades
 
