@@ -94,7 +94,7 @@ Este é um projeto pessoal, mas sugestões são bem-vindas:
 
 ## 📄 Licença
 
-Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para obter mais detalhes.
+Este projeto está licenciado sob a Licença MIT - consulte o arquivo [LICENSE](LICENSE) para obter mais detalhes da Licença.
 
 ## 👤 Autor
 
