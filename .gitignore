@@ -10,3 +10,6 @@
 *.dll
 *.so
 *.dylib
+
+# Atualizando o bin para o linux
+type_finance
