@@ -100,3 +100,15 @@ func CaminhoArquivoBIN(setNome string) (string, error) {
 
 	return CAMINHO_ARQ, nil
 }
+
+func CaminhoArquivoDownloads() (string, error) {
+	CaminhoHome, err := os.UserHomeDir()
+
+	if err != nil {
+		return "", err
+	}
+
+	PastaDownloads := filepath.Join(CaminhoHome, "Downloads")
+
+	return PastaDownloads, nil
+}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -140,4 +141,37 @@ func (MinhasFin *Arquivos) FecharMes(indice int) error {
 	Caderno.Aberto = false
 
 	return nil
+}
+
+//Funcao que salva na pasta downloads o nosso JSON para a gente guardar em outro lugar depois se preferir.
+func (Arq Arquivos) SalvarNoDownloads() (string, error) {
+	var contas string = "ano-" + strconv.Itoa(Arq.Ano) + ".json"
+
+	CAMINHO_DIR, err := CaminhoArquivoDownloads()
+	CAMINHO_ARQ := filepath.Join(CAMINHO_DIR, contas)
+
+	if err != nil {
+		return "", err
+	}
+
+	//Se o arquivo ja existir, ele eh esvaziado e reescrito com O_TRUNC;
+	Arq2, err := os.OpenFile(CAMINHO_ARQ, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0644)
+
+	if err != nil {
+		return "", err
+	}
+
+	defer Arq2.Close()
+
+	_Meu_Doc := json.NewEncoder(Arq2)
+	_Meu_Doc.SetIndent("", "  ")
+
+	//Aqui nao usamos ponteiro para passar a funcao, prefiro trabalhar com a copia. (Gosto pessoal)
+	err = _Meu_Doc.Encode(&Arq)
+
+	if err != nil {
+		return "", err
+	}
+
+	return CAMINHO_ARQ, err
 }

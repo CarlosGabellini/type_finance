@@ -114,6 +114,7 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 		fmt.Printf("\t04 - Imprimir tabela de receita e despesa do mes\n")
 		fmt.Printf("\t05 - Fazer o fechamento do mes\n")
 		fmt.Printf("\t06 - Fazer o salvamento || checkpoint\n")
+		fmt.Printf("\t07 - Copiar o arquivo para a pasta Dowloads\n")
 
 		PersonalizarTerminal()
 		fmt.Printf("\n")
@@ -233,6 +234,7 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				if err13 != nil {
 					fmt.Println(err13)
 					time.Sleep(2 * time.Second)
+					continue
 					
 				} else {
 					fmt.Printf("Arquivo salvo! Caminho: %s\n", Caminho)
@@ -256,9 +258,25 @@ func AbrirNovoMes(MinhasFin *spt.Arquivos, MesInput int) {
 				fmt.Printf("Arquivo salvo!\n")
 				fmt.Printf("Caminho: %s\n", Caminho)
 				time.Sleep(2 * time.Second)
+				continue
+
+			case 7:
+				Caminho, err := MinhasFin.SalvarNoDownloads()
+
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Printf("Arquivo salvo em downloads!\n")
+				fmt.Printf("Caminho: %s\n", Caminho)
+				time.Sleep(2 * time.Second)
+				continue
 
 			default:
 				fmt.Printf("Entrada invalida!")
+				time.Sleep(1 * time.Second)
 				continue
 		}
 	}
