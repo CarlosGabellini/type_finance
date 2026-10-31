@@ -354,6 +354,9 @@ func (MeuCard *MeuCaderno) CalcularSaldoFinal() float64 {
 
 	MeuSaldoAtual := Arredondamento2Digitos(MeuCard.SaldoInicial)
 
+	//Impressionante como essa funcao define um dos poderes de calculo da maquina e eh basicamente
+	//o coracao;
+
 	for _, calc := range MeuCard.MeusGastos {
 
 		if calc.Transacao == Ganho {
@@ -381,9 +384,9 @@ func (MeuCard MeuCaderno) BuscarID(id int) int {
 		return -1
 	}
 
-	for indice, MeusGastos := range MeuCard.MeusGastos {
+	for _, MeusGastos := range MeuCard.MeusGastos {
 		if MeusGastos.ID == id {
-			NovoID = indice
+			NovoID = MeusGastos.ID
 			chave = true
 		}
 	}

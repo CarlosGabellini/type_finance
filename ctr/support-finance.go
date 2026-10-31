@@ -293,6 +293,14 @@ func CadastrarReceitaDespesa(MinhasFin *spt.Arquivos, mes int) {
 		indice = 0
 	}
 
+	//Fazendo a validacao com o valor de referencia aqui para nao dar erro depois!
+	if MeuCaderno.ValorRef == 0 {
+		fmt.Printf("Defina um valor de referencia antes de fazer os cadastros!\n")
+		fmt.Printf("Se nao tiver um valor de referencia, coloque o valor 1000!\n")
+		time.Sleep(4 * time.Second)
+		return
+	}
+
 	//Funcao anonima usada para nao ter indice invalido! e para nao fechar o programa inesperadamente;
 	//NAO MECHER!
 	indiceValido := func() bool {

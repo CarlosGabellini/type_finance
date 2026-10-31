@@ -212,6 +212,7 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 		fmt.Printf("02 - Abrir novo mes\n")
 		fmt.Printf("03 - Ver meses cadastrados\n")
 		fmt.Printf("04 - Ver a tabela de um mes fechado.\n")
+		fmt.Printf("05 - Exportar um mes para arquivo TXT.\n")
 
 		for i := 0; i < 50; i++ {
 			fmt.Printf("-")
@@ -258,11 +259,47 @@ func MenuDoAno(MinhasFin *spt.Arquivos) {
 
 				if err != nil {
 					fmt.Println(err)
+					time.Sleep(2 * time.Second)
 					continue
 				}
 
 				VerMesFechado(MinhasFin, Mes)
 
+				time.Sleep(1 * time.Second)
+				continue
+
+			case 5:
+				fmt.Printf("Digite o numero do mes que deseja exportar: ")
+				Mes, err := strconv.Atoi(LerLinha())
+
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				if Mes <= 0 || Mes > 12 {
+					fmt.Printf("Mes deve estar entre 1 a 12!\n")
+					time.Sleep(1 * time.Second)
+					continue
+				}
+
+				MesCOPIADO := MinhasFin.MeuCaderno[Mes - 1]
+				TEXTO_FORMATADO := FormatarTabela(MesCOPIADO, MinhasFin.Ano)
+
+				NOME_TABELA_METADE := strings.ToLower(MesCOPIADO.Mes) + "-"
+				NOME_TABELA_COMPLETO := NOME_TABELA_METADE + strconv.Itoa(MinhasFin.Ano) + ".txt"
+
+				Caminho, err := SalvarTXT_emDowloads(TEXTO_FORMATADO, NOME_TABELA_COMPLETO)
+
+				if err != nil {
+					fmt.Println(err)
+					time.Sleep(2 * time.Second)
+					continue
+				}
+
+				fmt.Printf("Tabela exportada!\n");
+				fmt.Printf("Caminho da tabela: %s\n", Caminho)
 				time.Sleep(1 * time.Second)
 				continue
 
